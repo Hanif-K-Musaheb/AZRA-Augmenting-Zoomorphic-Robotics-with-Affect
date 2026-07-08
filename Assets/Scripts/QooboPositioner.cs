@@ -6,23 +6,22 @@ using UnityEngine.InputSystem;
 
 public class QooboPositioner : MonoBehaviour
 {
-
     [Header("References")]
     [SerializeField] [Tooltip("Top-level visual/prefab root for the AR Qoobo.")] private GameObject qooboMesh;
     [SerializeField] [Tooltip("Reference to SceneController to trigger wake-up sequence on placement.")] private SceneController sceneController;
     
     [Header("Settings")]
-    [SerializeField] private float handHeightOffset = -0.1f; // Offset BELOW hand position (negative value)
-    [SerializeField] private float handForwardOffset = 0.2f; // Offset FORWARD from hand position
-    [SerializeField] private float pinchThreshold = 0.02f; // How close fingers need to be for pinch
-	[SerializeField] private bool enablePinchPlacement = true; // Toggle pinch-to-place behavior
+    [SerializeField] private float handHeightOffset = -0.1f; 
+    [SerializeField] private float handForwardOffset = 0.2f; 
+    [SerializeField] private float pinchThreshold = 0.02f; 
+    [SerializeField] private bool enablePinchPlacement = true; 
     
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
     
     private bool isPositioned = false;
     private bool isRepositioning = false;
-    private bool hasPinchPositioned = false; // New flag to track if pinch positioning has been used
+    private bool hasPinchPositioned = false; 
     private XRHandSubsystem handSubsystem;
 
     void Start()
@@ -41,7 +40,7 @@ public class QooboPositioner : MonoBehaviour
             return;
         }
 
-        // Get the hand tracking subsystem
+        // Try to get the hand tracking subsystem
         var handSubsystems = new List<XRHandSubsystem>();
         SubsystemManager.GetSubsystems(handSubsystems);
         if (handSubsystems.Count > 0)
@@ -51,145 +50,126 @@ public class QooboPositioner : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No hand tracking subsystem found!");
-            enabled = false;
+            // WE DO NOT DISABLE THE SCRIPT HERE ANYMORE. 
+            // This allows our fallback input system methods to still keep running!
+            Debug.LogWarning("Subsystem not found. Relying on Unity Input Device fallbacks.");
         }
     }
 
     void Update()
     {
-        if (handSubsystem == null) return;
-
-        // Check if both hands are tracked
-        bool leftHandTracked = handSubsystem.leftHand.isTracked;
-        bool rightHandTracked = handSubsystem.rightHand.isTracked;
-
-        if (showDebugLogs)
+        // 1. BACKUP METHOD: Check for Space key using the standard Input System
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            Debug.Log($"Current states - isPositioned: {isPositioned}, isRepositioning: {isRepositioning}");
-            Debug.Log($"Hand tracking - Left: {leftHandTracked}, Right: {rightHandTracked}");
-        }
-
-        // Check for Space key using new Input System
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && rightHandTracked)
-        {
-            Debug.Log("Space key pressed - Starting repositioning");
-            isRepositioning = true;
-            isPositioned = false;
+            Debug.Log("Space key pressed - Forcing position update via fallback system.");
             UpdateQooboPosition();
-            // Reset states after space key positioning
-            isRepositioning = false;
-            isPositioned = false;
+            return;
         }
 
-		if (enablePinchPlacement && leftHandTracked && rightHandTracked)
+        // 2. ORIGINAL METHOD: Only run pinch tracking if the subsystem is working
+        if (handSubsystem != null && enablePinchPlacement)
         {
-            // Get left hand pinch gesture
-            XRHandJoint leftThumbTip = handSubsystem.leftHand.GetJoint(XRHandJointID.ThumbTip);
-            XRHandJoint leftIndexTip = handSubsystem.leftHand.GetJoint(XRHandJointID.IndexTip);
-            
-            // Get positions from joints
-            Vector3 leftThumbPos = leftThumbTip.TryGetPose(out Pose thumbPose) ? thumbPose.position : Vector3.zero;
-            Vector3 leftIndexPos = leftIndexTip.TryGetPose(out Pose indexPose) ? indexPose.position : Vector3.zero;
-            
-            float pinchDistance = Vector3.Distance(leftThumbPos, leftIndexPos);
-            bool isPinching = pinchDistance < pinchThreshold;
-            
-            if (showDebugLogs)
-            {
-                Debug.Log($"Pinch distance: {pinchDistance}, Threshold: {pinchThreshold}, IsPinching: {isPinching}");
-            }
+            bool leftHandTracked = handSubsystem.leftHand.isTracked;
+            bool rightHandTracked = handSubsystem.rightHand.isTracked;
 
-            if (isPinching && !hasPinchPositioned) // Only allow pinch if it hasn't been used before
+            if (leftHandTracked && rightHandTracked)
             {
-                if (!isPositioned || isRepositioning)
+                XRHandJoint leftThumbTip = handSubsystem.leftHand.GetJoint(XRHandJointID.ThumbTip);
+                XRHandJoint leftIndexTip = handSubsystem.leftHand.GetJoint(XRHandJointID.IndexTip);
+                
+                Vector3 leftThumbPos = leftThumbTip.TryGetPose(out Pose thumbPose) ? thumbPose.position : Vector3.zero;
+                Vector3 leftIndexPos = leftIndexTip.TryGetPose(out Pose indexPose) ? indexPose.position : Vector3.zero;
+                
+                float pinchDistance = Vector3.Distance(leftThumbPos, leftIndexPos);
+                bool isPinching = pinchDistance < pinchThreshold;
+
+                if (isPinching && !hasPinchPositioned) 
                 {
-                    // Only allow pinch repositioning if wake-up is not complete
                     if (!sceneController.IsWakeUpComplete())
                     {
-                        Debug.Log($"Pinch detected - Updating position (isPositioned: {isPositioned}, isRepositioning: {isRepositioning})");
+                        Debug.Log("Pinch detected via subsystem - Updating position.");
                         UpdateQooboPosition();
-                        hasPinchPositioned = true; // Set the flag after first successful pinch positioning
-                       //Debug.Log("Pinch positioning has been used - further positioning only available via spacebar");
-                    }
-                    else
-                    {
-                        //Debug.Log("Pinch detected but wake-up sequence is complete - ignoring");
+                        hasPinchPositioned = true; 
                     }
                 }
-                else
-                {
-                    Debug.Log("Pinch detected but position is locked");
-                }
-            }
-            else if (isPinching && hasPinchPositioned)
-            {
-                //Debug.Log("Pinch detected but pinch positioning has already been used - use spacebar to reposition");
             }
         }
     }
 
     public void UpdateQooboPosition()
     {
-        Debug.Log($"UpdateQooboPosition called - States before update: isPositioned: {isPositioned}, isRepositioning: {isRepositioning}");
+        Vector3 rightPalmPosition = Vector3.zero;
+        Quaternion rightPalmRotation = Quaternion.identity;
+        bool foundPosition = false;
 
-        if (handSubsystem == null || !handSubsystem.rightHand.isTracked) 
+        // Try Method A: Subsystem Bone Tracking
+        if (handSubsystem != null && handSubsystem.rightHand.isTracked)
         {
-            Debug.LogWarning("Cannot update position - right hand not tracked");
-            return;
+            XRHandJoint rightPalm = handSubsystem.rightHand.GetJoint(XRHandJointID.Palm);
+            if (rightPalm.TryGetPose(out Pose palmPose) && palmPose.position != Vector3.zero)
+            {
+                rightPalmPosition = palmPose.position;
+                rightPalmRotation = palmPose.rotation;
+                foundPosition = true;
+                Debug.Log("Hand position fetched via Subsystem.");
+            }
         }
 
-        // Get right hand palm position and rotation
-        XRHandJoint rightPalm = handSubsystem.rightHand.GetJoint(XRHandJointID.Palm);
-        if (!rightPalm.TryGetPose(out Pose palmPose))
+        // Try Method B: Input Device Characteristic Fallback (The system driving your working pointer)
+        if (!foundPosition)
         {
-            Debug.LogWarning("Cannot update position - failed to get palm pose");
-            return;
+            var rightHandDevices = new List<UnityEngine.XR.InputDevice>();
+            UnityEngine.XR.InputDevices.GetDevicesWithCharacteristics(UnityEngine.XR.InputDeviceCharacteristics.Right, rightHandDevices);
+            if (rightHandDevices.Count > 0)
+            {
+                if (rightHandDevices[0].TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 pos))
+                {
+                    rightPalmPosition = pos;
+                    rightHandDevices[0].TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rot);
+                    rightPalmRotation = rot;
+                    foundPosition = true;
+                    Debug.Log("Hand position fetched via Input Device characteristic.");
+                }
+            }
         }
 
-        Vector3 rightPalmPosition = palmPose.position;
-        Quaternion rightPalmRotation = palmPose.rotation;
-
-        if (rightPalmPosition == Vector3.zero)
+        // Try Method C: Absolute emergency fallback (Spawns right in front of your headset view)
+        if (!foundPosition)
         {
-            Debug.LogWarning("Cannot update position - invalid palm position");
-            return;
+            Debug.LogWarning("No hand tracking device stream found! Using headset center fallback view.");
+            rightPalmPosition = Camera.main.transform.position + Camera.main.transform.forward * 0.5f;
+            rightPalmRotation = Camera.main.transform.rotation;
         }
 
-        // Calculate the position below and forward of the palm based on palm's orientation
+        // Calculate positions using horizontal/vertical offsets
         Vector3 downDirection = rightPalmRotation * Vector3.down;
         Vector3 forwardDirection = rightPalmRotation * Vector3.forward;
         
-        // Apply both vertical and forward offsets
         Vector3 targetPos = rightPalmPosition + (downDirection * Mathf.Abs(handHeightOffset)) + 
-                                              (forwardDirection * handForwardOffset);
+                            (forwardDirection * handForwardOffset);
         
-        Vector3 oldPosition = qooboMesh.transform.position;
-        
-        // Instant position update
+        // Move the mesh
         qooboMesh.transform.position = targetPos;
 
-        // Instant rotation update - preserve existing X/Z tilt, apply only yaw from palm
+        // Rotate the mesh matching your alignment settings
         Vector3 palmForward = rightPalmRotation * Vector3.forward;
-        palmForward.y = 0; // Zero out vertical component for yaw
+        palmForward.y = 0; 
         if (palmForward != Vector3.zero)
         {
             Quaternion yawRotation = Quaternion.LookRotation(palmForward, Vector3.up);
             Vector3 currentEuler = qooboMesh.transform.eulerAngles;
-            float yaw = yawRotation.eulerAngles.y;
+            float rotationOffset = -40f; // qoobo has been acting weirdly and is getting rotated to the right when i place him
+            float yaw = yawRotation.eulerAngles.y+ rotationOffset;
             qooboMesh.transform.rotation = Quaternion.Euler(currentEuler.x, yaw, currentEuler.z);
         }
 
-        Debug.Log($"Position updated - Old: {oldPosition}, New: {targetPos}, Movement delta: {Vector3.Distance(oldPosition, targetPos)}");
-        
-        // Notify SceneController to start wake up sequence
+        // Fire the projection sequence!
         sceneController.StartWakeUpSequence();
-        
-        Debug.Log($"UpdateQooboPosition complete - States after update: isPositioned: {isPositioned}, isRepositioning: {isRepositioning}");
+        Debug.Log($"Qoobo successfully positioned at: {targetPos}");
     }
 
     public bool IsPositioned()
     {
         return isPositioned && !isRepositioning;
     }
-} 
+}

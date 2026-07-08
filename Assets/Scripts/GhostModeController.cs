@@ -24,6 +24,8 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private float turnSpeedDegPerSec = 240f; // yaw to face target
 	[SerializeField] private float followSmoothing = 0.15f; // positional smoothing factor
 	[SerializeField] private float heightOffset = 0.0f; // optional offset relative to target height
+	[SerializeField] private Transform playerTransform; // drag your Main Camera here in the Inspector
+	
 
 	private bool isGhost;
 	private bool isTransitioning;
@@ -60,6 +62,11 @@ public class GhostModeController : MonoBehaviour
 
 		if (isGhost && !isTransitioning)
 		{
+			// follow the frisbee if one exists, otherwise follow the player
+        	        followTarget = frisbeeMarker.Current != null ? frisbeeMarker.Current : playerTransform;
+
+
+
 			FollowTargetUpdate();
 		}
 	}
@@ -212,6 +219,8 @@ public class GhostModeController : MonoBehaviour
 		}
 		return 0f; // Default to transparent
 	}
+
+	
 }
 
 
