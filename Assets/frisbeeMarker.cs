@@ -1,29 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine;
+using Oculus.Interaction; // ISDK namespace - contains Grabbable, PointerEvent, etc.
 
 public class frisbeeMarker : MonoBehaviour
 {
-    // A "static" variable is shared across ALL instances of this script.
-    // Since there's only ever one frisbee in the scene, this variable
-    // acts as a single global answer to "where is the frisbee right now?"
     public static Transform Current;
+    public static bool IsReleased;
 
-    // OnEnable is a built-in Unity function that runs automatically the
-    // moment this object becomes active in the scene (e.g. right after
-    // Instantiate() creates it). We use it to say "I exist, here's my transform."
+    private Grabbable grabbable;
+
+    void Awake()
+    {
+        grabbable = GetComponent<Grabbable>();
+    }
+
     void OnEnable()
     {
         Current = transform;
+        IsReleased = false; // starts un-thrown when spawned/re-enabled
+
+        if (grabbable != null)
+        {
+            // WhenPointerEventRaised fires for every pointer interaction
+            // (select, unselect, hover, etc). We filter for the release type below.
+            grabbable.WhenPointerEventRaised += HandlePointerEvent;
+        }
     }
 
-    // OnDisable runs automatically when this object is destroyed or
-    // deactivated. We use it to clear the reference so nothing keeps
-    // pointing at a frisbee that no longer exists.
     void OnDisable()
     {
-        if (Current == transform)
-            Current = null;
+        if (Current == transform) Current = null;
+
+        if (grabbable != null)
+        {
+            grabbable.WhenPointerEventRaised -= HandlePointerEvent;
+        }
+    }
+
+    private void HandlePointerEvent(PointerEvent evt)
+    {
+        // Unselect = hand let go of the object (covers both dropping and throwing)
+        if (evt.Type == PointerEventType.Unselect)
+        {
+            IsReleased = true;
+        }
     }
 }

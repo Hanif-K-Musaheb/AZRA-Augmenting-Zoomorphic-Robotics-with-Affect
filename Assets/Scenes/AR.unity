@@ -15349,18 +15349,21 @@ MonoBehaviour:
   arQooboRoot: {fileID: 1112418015}
   bodyRenderers:
   - {fileID: 341229972}
-  followTarget: {fileID: 0}
+  followTarget: {fileID: 1222378854}
   startInGhostMode: 0
   allowKeyboardToggle: 1
   toggleKeyFallback: 21
   ghostScaleFactor: 0.5
   riseHeight: 0.3
   transitionDuration: 1.5
+  thresholdForCatch: 0.5
   preferredDistance: 0.5
   maxDriftSpeed: 1
   turnSpeedDegPerSec: 240
   followSmoothing: 0.15
   heightOffset: 0
+  playerTransform: {fileID: 1222378854}
+  carryPoint: {fileID: 0}
 --- !u!114 &799751477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37822,63 +37825,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 830375250}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1816813629
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.137
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.836
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.502
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2664679950526427600, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7073045106626747564, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
-      propertyPath: m_Name
-      value: Frisbee
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2f8c441b5068ad043a210bb6a508e9b0, type: 3}
 --- !u!1 &1817052836
 GameObject:
   m_ObjectHideFlags: 0
@@ -45398,5 +45344,4 @@ SceneRoots:
   - {fileID: 1655128438}
   - {fileID: 1905671473}
   - {fileID: 571891720}
-  - {fileID: 1816813629}
   - {fileID: 163078780}

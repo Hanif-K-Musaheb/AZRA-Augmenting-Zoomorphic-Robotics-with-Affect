@@ -17,6 +17,7 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private float ghostScaleFactor = 0.5f; // shrink to 50%
 	[SerializeField] private float riseHeight = 0.3f; // meters upward on enter
 	[SerializeField] private float transitionDuration = 1.5f; // seconds for enter/exit
+	[SerializeField] private float thresholdForCatch = 0.5f; // meters from frisbee to consider "caught"
 
 	[Header("Follow Settings")] 
 	[SerializeField] private float preferredDistance = 0.5f; // meters from target
@@ -25,6 +26,10 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private float followSmoothing = 0.15f; // positional smoothing factor
 	[SerializeField] private float heightOffset = 0.0f; // optional offset relative to target height
 	[SerializeField] private Transform playerTransform; // drag your Main Camera here in the Inspector
+
+	[Header("Fetch Settings")]
+	[SerializeField] private Transform carryPoint; // empty child GameObject on the ghost, e.g. positioned near its "mouth"/front
+
 	
 
 	private bool isGhost;
@@ -35,6 +40,10 @@ public class GhostModeController : MonoBehaviour
 
 	// Public property to check ghost state
 	public bool IsGhost => isGhost;
+	private enum FetchState { Idle, ChasingFrisbee, ReturningToPlayer }
+	private FetchState fetchState = FetchState.Idle;
+	private Transform carriedFrisbee = null;
+
 
 	void Awake()
 	{
@@ -52,7 +61,7 @@ public class GhostModeController : MonoBehaviour
 	{
 		if (allowKeyboardToggle)
 		{
-			bool hashApprox = Keyboard.current != null && Keyboard.current.shiftKey.isPressed && Keyboard.current[Key.Digit3].wasPressedThisFrame; // '#' on US layout
+			bool hashApprox = Keyboard.current != null && Keyboard.current.shiftKey.isPressed && Keyboard.current[Key.Digit3].wasPressedThisFrame;
 			bool fallbackKey = Keyboard.current != null && Keyboard.current[toggleKeyFallback].wasPressedThisFrame;
 			if (hashApprox || fallbackKey)
 			{
@@ -60,15 +69,94 @@ public class GhostModeController : MonoBehaviour
 			}
 		}
 
+		// Step 1: If we're idle and a frisbee appears, kick off the fetch sequence.
+		// This works whether Qoobo is currently a ghost or not - we enter ghost
+		// mode ourselves rather than requiring it to already be active.
+		if (fetchState == FetchState.Idle && frisbeeMarker.Current != null && frisbeeMarker.IsReleased && !isTransitioning)
+		{
+			fetchState = FetchState.ChasingFrisbee;
+			if (!isGhost)
+			{
+				StartCoroutine(EnterGhostMode());
+			}
+		}
+
+		// Step 2: Only move/chase/return once we're actually a ghost and not
+		// mid-transition (rising up, shrinking, etc).
 		if (isGhost && !isTransitioning)
 		{
-			// follow the frisbee if one exists, otherwise follow the player
-        	        followTarget = frisbeeMarker.Current != null ? frisbeeMarker.Current : playerTransform;
+			switch (fetchState)
+			{
+				case FetchState.ChasingFrisbee:
+					if (frisbeeMarker.Current == null)
+					{
+						// Frisbee vanished (e.g. someone deleted it) - abandon fetch, go home
+						fetchState = FetchState.Idle;
+						followTarget = playerTransform;
+					}
+					else
+					{
+						followTarget = frisbeeMarker.Current;
+						if (IsNearFrisbee(arQooboRoot.position, frisbeeMarker.Current.position, thresholdForCatch))
+						{
+							PickUpFrisbee(frisbeeMarker.Current);
+							fetchState = FetchState.ReturningToPlayer;
+						}
+					}
+					break;
 
+				case FetchState.ReturningToPlayer:
+					followTarget = playerTransform;
+					if (IsNearFrisbee(arQooboRoot.position, playerTransform.position, thresholdForCatch))//reusing the IsNearFrisbee function to check if we are close enough to the player to drop the frisbee :/
+					{
+						DropFrisbeeAndReturnToNormal();
+					}
+					break;
 
+				case FetchState.Idle:
+					// No fetch happening - just follow the player as normal ghost behavior
+					followTarget = playerTransform;
+					break;
+			}
 
 			FollowTargetUpdate();
 		}
+	}
+
+	private void PickUpFrisbee(Transform frisbee)	
+	{
+		carriedFrisbee = frisbee;
+		Transform attachPoint = carryPoint != null ? carryPoint : arQooboRoot;
+		frisbee.SetParent(attachPoint);
+		frisbee.localPosition = Vector3.zero;
+		frisbee.localRotation = Quaternion.identity;
+	}
+
+	private void DropFrisbeeAndReturnToNormal()
+	{
+		if (carriedFrisbee != null)
+		{
+			Destroy(carriedFrisbee.gameObject);
+			carriedFrisbee = null; 
+		}
+
+		fetchState = FetchState.Idle;
+		StartCoroutine(ExitGhostMode()); // transition back to normal (non-ghost) mode
+	}
+
+
+
+
+	private bool IsNearFrisbee(Vector3 quooboPos, Vector3 frisbeePos, float threshold)//fix this to be universal distance check, not just for frisbee. change frisbee threshold
+	{
+		// Copy each position but force Y to 0, so only X and Z are compared
+		Vector3 quooboPosFlat = new Vector3(quooboPos.x, 0f, quooboPos.z);
+		Vector3 frisbeePosFlat = new Vector3(frisbeePos.x, 0f, frisbeePos.z);
+
+		// Distance between the two "flattened" points, ignoring height
+		float horizontalDist = Vector3.Distance(quooboPosFlat, frisbeePosFlat);
+
+		return horizontalDist <= threshold;
 	}
 
 	public void ToggleGhostMode()
