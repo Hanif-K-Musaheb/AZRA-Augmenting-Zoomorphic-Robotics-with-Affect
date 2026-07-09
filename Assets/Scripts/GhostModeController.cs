@@ -123,14 +123,24 @@ public class GhostModeController : MonoBehaviour
 		}
 	}
 
-	private void PickUpFrisbee(Transform frisbee)	
-	{
-		carriedFrisbee = frisbee;
-		Transform attachPoint = carryPoint != null ? carryPoint : arQooboRoot;
-		frisbee.SetParent(attachPoint);
-		frisbee.localPosition = Vector3.zero;
-		frisbee.localRotation = Quaternion.identity;
-	}
+	private void PickUpFrisbee(Transform frisbee)
+{
+    Transform attachPoint = carryPoint != null ? carryPoint : arQooboRoot;
+
+    // Stop physics from affecting the frisbee while it's being carried
+    Rigidbody frisbeeRb = frisbee.GetComponent<Rigidbody>();
+    if (frisbeeRb != null)
+    {
+        frisbeeRb.isKinematic = true; // disables gravity + physics forces
+        frisbeeRb.velocity = Vector3.zero; // stop any leftover momentum from the throw also it is linearVelocity in newer versions of Unity
+    }
+
+    frisbee.SetParent(attachPoint);
+    frisbee.localPosition = Vector3.zero;
+    frisbee.localRotation = Quaternion.identity;
+
+	carriedFrisbee = frisbee;
+}
 
 	private void DropFrisbeeAndReturnToNormal()
 	{
