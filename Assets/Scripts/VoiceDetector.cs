@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.Android;            // new addition dont know if it will work 
+
 
 public class VoiceDetector : MonoBehaviour
 {
@@ -42,6 +44,11 @@ public class VoiceDetector : MonoBehaviour
 
     private void Start()
     {
+        // new addition dont know if it will work 
+        if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+        {
+            Permission.RequestUserPermission(Permission.Microphone);
+        }
         // Initialize word groups if empty
         InitializeWordGroups();
         
@@ -109,6 +116,19 @@ public class VoiceDetector : MonoBehaviour
             wordGroups.Add(new WordGroup {
                 groupName = "Rest",
                 variations = new List<string> { "rest", "resting", "stay", "stop", "go back", "return", "sit" }
+            });
+            // word groupd for the fetch sequence
+            wordGroups.Add(new WordGroup {//frisbee fetch command
+                groupName = "Fetch",
+                variations = new List<string> { "fetch", "get it", "bring it", "go get it", "retrieve it" }
+            });
+            wordGroups.Add(new WordGroup {//frisbee retrieve command
+                groupName = "Retrieve",
+                variations = new List<string> { "retrieve", "bring it back", "go back", "come back" }
+            });
+            wordGroups.Add(new WordGroup {//frisbee drop command
+                groupName = "Drop It",
+                variations = new List<string> { "drop it", "let go", "release", "drop" }
             });
         }
     }
@@ -360,6 +380,37 @@ public class VoiceDetector : MonoBehaviour
                 response = emotionModel.CalculateEmotionalResponse("TouchHeard");
                 emotionController.TryDisplayEmotion(response.EmotionToDisplay, response.TriggerEvent);
                 break;
+            
+            //fetch sequence commands
+            case "Fetch":
+                if (showDebugLogs)
+                    Debug.Log("Detected: Fetch command!");
+                
+                if (ghostModeController != null)
+                {
+                    ghostModeController.AllowFetch();
+                }
+                break;
+            case "Retrieve":
+                if (showDebugLogs)
+                    Debug.Log("Detected: Retrieve command!");
+                
+                if (ghostModeController != null)
+                {
+                    ghostModeController.AllowRetrieve();
+                }
+                break;
+            case "Drop It":
+                if (showDebugLogs)
+                    Debug.Log("Detected: Drop command!");
+                
+                if (ghostModeController != null)
+                {
+                    ghostModeController.AllowDrop();
+                }
+                break;
+            
+
         }
     }
 

@@ -11,8 +11,9 @@ public class QooboPositioner : MonoBehaviour
     [SerializeField] [Tooltip("Reference to SceneController to trigger wake-up sequence on placement.")] private SceneController sceneController;
     
     [Header("Settings")]
-    [SerializeField] private float handHeightOffset = -0.1f; 
+    [SerializeField] private float handHeightOffset = -0.3f; 
     [SerializeField] private float handForwardOffset = 0.2f; 
+    [SerializeField] private float rotationOffset = 60f;
     [SerializeField] private float pinchThreshold = 0.02f; 
     [SerializeField] private bool enablePinchPlacement = true; 
     
@@ -158,7 +159,7 @@ public class QooboPositioner : MonoBehaviour
         {
             Quaternion yawRotation = Quaternion.LookRotation(palmForward, Vector3.up);
             Vector3 currentEuler = qooboMesh.transform.eulerAngles;
-            float rotationOffset = -40f; // qoobo has been acting weirdly and is getting rotated to the right when i place him
+          
             float yaw = yawRotation.eulerAngles.y+ rotationOffset;
             qooboMesh.transform.rotation = Quaternion.Euler(currentEuler.x, yaw, currentEuler.z);
         }

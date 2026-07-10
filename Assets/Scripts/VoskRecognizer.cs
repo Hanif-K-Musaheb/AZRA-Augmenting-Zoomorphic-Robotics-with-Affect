@@ -51,7 +51,7 @@ public class VoskRecognizer
             // 5. Copy the entire folder structure including all subdirectories (am, conf, graph, ivector)
             
             string targetModelPath = System.IO.Path.Combine(Application.persistentDataPath, "VoskModel");
-            
+
             if (showDebugLogs)
             {
                 Debug.Log($"VoskRecognizer: Loading model from {targetModelPath}");
