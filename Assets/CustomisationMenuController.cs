@@ -5,13 +5,16 @@ using TMPro;
 public class CustomisationMenuController : MonoBehaviour
 {    
     [Header("Emotional State Buttons")]
-    [SerializeField] private Button happyButton;
-    [SerializeField] private Button neutralButton;
-    [SerializeField] private Button annoyedButton;
-    [SerializeField] private Button sadButton;
+    [SerializeField] private Button CowboyHatButton;
+    [SerializeField] private Button MagicianHatButton;
+    [SerializeField] private Button SombreroHatButton;
+    [SerializeField] private Button NoHatButton;
 
     [Header("Customisation Assets")]
-    [SerializeField] private GameObject testCubeHat;
+    [SerializeField] private GameObject CowboyHat;
+    [SerializeField] private GameObject MagicianHat;
+    [SerializeField] private GameObject SombreroHat;
+
     
     
     void Start()
@@ -23,24 +26,24 @@ public class CustomisationMenuController : MonoBehaviour
     
     void SetupEmotionalStateButtons()
     {
-        if (happyButton != null)
+        if (CowboyHatButton != null)
         {
-            happyButton.onClick.AddListener(() => EquipHat("Cube"));
+            CowboyHatButton.onClick.AddListener(() => EquipHat("Cowboy"));
         }
-        
-        if (neutralButton != null)
+
+        if (MagicianHatButton != null)
         {
-            neutralButton.onClick.AddListener(() => EquipHat("None"));
+            MagicianHatButton.onClick.AddListener(() => EquipHat("Magician"));
         }
-        
-        if (annoyedButton != null)
+
+        if (SombreroHatButton != null)
         {
-            annoyedButton.onClick.AddListener(() => EquipHat("None"));
+            SombreroHatButton.onClick.AddListener(() => EquipHat("Sombrero"));
         }
-        
-        if (sadButton != null)
+
+        if (NoHatButton != null)
         {
-            sadButton.onClick.AddListener(() => EquipHat("None"));
+            NoHatButton.onClick.AddListener(() => EquipHat("None"));
         }
     }
 
@@ -48,40 +51,35 @@ public class CustomisationMenuController : MonoBehaviour
     {
         switch (hatType)
         {
-            case "Cube":
-                testCubeHat.SetActive(true); // Turns the cube on
-                Debug.Log("CustomisationMenu: Equipped Cube Hat!");
+            case "Cowboy":
+                MagicianHat.SetActive(false);
+                SombreroHat.SetActive(false);
+                CowboyHat.SetActive(true); // Turns the cowboy hat on
+                Debug.Log("CustomisationMenu: Equipped Cowboy Hat!");
+                break;
+            case "Magician":
+                CowboyHat.SetActive(false);
+                SombreroHat.SetActive(false);
+                MagicianHat.SetActive(true); // Turns the magician hat on
+                Debug.Log("CustomisationMenu: Equipped Magician Hat!");
+                break;
+            case "Sombrero":
+                CowboyHat.SetActive(false); 
+                MagicianHat.SetActive(false); 
+                SombreroHat.SetActive(true); // Turns the sombrero hat on
+                Debug.Log("CustomisationMenu: Equipped Sombrero Hat!");
                 break;
 
             case "None":
-                testCubeHat.SetActive(false); // Turns the cube off
+                CowboyHat.SetActive(false); // Turns the cowboy hat off
+                MagicianHat.SetActive(false); // Turns the magician hat off
+                SombreroHat.SetActive(false); // Turns the sombrero hat off
                 Debug.Log("CustomisationMenu: Removed all hats.");
                 break;
         }
     }
     
-    void SetEmotionalState(string state)
-    {
-        switch (state)
-        {
-            case "Happy":
-                //emotionModel.SetHappyState();
-                Debug.Log("MetricsMenu: Set robot to Happy state (V: 6, A: 0)");
-                break;
-            case "Neutral":
-                //emotionModel.SetNeutralState();
-                Debug.Log("MetricsMenu: Set robot to Neutral state (V: 0, A: 0)");
-                break;
-            case "Annoyed":
-                //emotionModel.SetAnnoyedState();
-                Debug.Log("MetricsMenu: Set robot to Annoyed state (V: -6, A: 6)");
-                break;
-            case "Sad":
-                //emotionModel.SetSadState();
-                Debug.Log("MetricsMenu: Set robot to Sad state (V: -6, A: 0)");
-                break;
-        }
-    }
+
 }
    
 
