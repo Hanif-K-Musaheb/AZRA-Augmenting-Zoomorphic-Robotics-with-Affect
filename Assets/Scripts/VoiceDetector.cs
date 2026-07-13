@@ -384,7 +384,7 @@ public class VoiceDetector : MonoBehaviour
             //fetch sequence commands
             case "Fetch":
                 if (showDebugLogs)
-                    Debug.Log("Detected: Fetch command!");
+                    Debug.Log("Detected: Fetch command!<-------------- stage 1 fetch heard AllowFetch() called");
                 
                 if (ghostModeController != null)
                 {
