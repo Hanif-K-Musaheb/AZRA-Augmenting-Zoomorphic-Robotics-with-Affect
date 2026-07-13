@@ -9823,6 +9823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ecc4d186d728c48bd126ccd7314d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugLogs: 1
   CowboyHatButton: {fileID: 1769181124}
   MagicianHatButton: {fileID: 919399310}
   SombreroHatButton: {fileID: 818636851}
@@ -9830,6 +9831,8 @@ MonoBehaviour:
   CowboyHat: {fileID: 200612851}
   MagicianHat: {fileID: 238691269}
   SombreroHat: {fileID: 1174791154}
+  emotionModel: {fileID: 799751474}
+  emotionController: {fileID: 799751471}
 --- !u!1 &498176962
 GameObject:
   m_ObjectHideFlags: 0
@@ -16083,7 +16086,7 @@ MonoBehaviour:
   voiceDetector: {fileID: 1629618762}
   studyLogger: {fileID: 1456781914}
   faceCanvas: {fileID: 672317949}
-  showDebugText: 0
+  showDebugText: 1
   emotionFormat: 'Emotion: {0}'
   displayDuration: 10
   displayCooldown: 3

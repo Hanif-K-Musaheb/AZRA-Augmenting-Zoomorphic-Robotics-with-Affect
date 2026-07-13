@@ -94,6 +94,11 @@ public class EmotionModel : MonoBehaviour
         { "LookingTowards", new EmotionalResponseValues { Valence = 4f, Arousal = 3f, Touch = 0f, Rest = 0f, Social = 4f } },
         { "BeingHeld", new EmotionalResponseValues { Valence = 8f, Arousal = -3f, Touch = 10f, Rest = 2f, Social = 8f } },
         { "Feeding", new EmotionalResponseValues { Valence = 6f, Arousal = 3f, Touch = 0f, Rest = 2f, Social = 4f } },
+        // { "CowboyHatEquipped", new EmotionalResponseValues { Valence = 5f, Arousal = 3f, Touch = 0f, Rest = 0f, Social = 2f } },
+        // { "MagicianHatEquipped", new EmotionalResponseValues { Valence = 3f, Arousal = 5f, Touch = 0f, Rest = 0f, Social = 4f } },
+        // { "SombreroHatEquipped", new EmotionalResponseValues { Valence = 7f, Arousal = 4f, Touch = 0f, Rest = 0f, Social = 3f } },
+        // { "NoHatEquipped", new EmotionalResponseValues { Valence = -2f, Arousal = -2f, Touch = 0f, Rest = 0f, Social = -3f } },
+        //add the customisation events here 
     };
 
     [Header("Need Values")]

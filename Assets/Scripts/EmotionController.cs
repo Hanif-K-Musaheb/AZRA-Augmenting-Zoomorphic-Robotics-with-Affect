@@ -729,4 +729,10 @@ public class EmotionController : MonoBehaviour
         }
         DisplayEmotion(displayString, triggerEvent);
     }
+
+    public bool GetCanDisplayEmotion()
+    {
+        return CanDisplayEmotion();
+    }
+   
 } 
