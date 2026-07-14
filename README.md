@@ -42,6 +42,9 @@ AZRA is an interactive robot companion project designed for use with Meta Quest 
 - Ensure all required hardware and software are connected and running before entering Play mode.
 - For best results, use the latest Meta Quest PC app and Unity LTS version.
 
+## Change Log
+- [Change Log](https://github.com/Hanif-K-Musaheb/AZRA-Augmenting-Zoomorphic-Robotics-with-Affect/blob/main/CHANGELOG.md)
+
 ---
 ## SceneController.cs
 Central manager for the robot and scene. Handles user input, coordinates emotional responses, manages distance checks, controls sound, light, face, tail, and thought bubble displays, and orchestrates the wake-up sequence.
