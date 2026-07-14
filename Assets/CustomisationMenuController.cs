@@ -142,25 +142,25 @@ public class CustomisationMenuController : MonoBehaviour
         {
             case 1:
                 if (showDebugLogs)
-                    Debug.Log("Detected: An angry word!==========>1");
+                    Debug.Log("Detected: An angry word!");
                 var response = emotionModel.CalculateEmotionalResponse("AngryHeard");
                 emotionController.TryDisplayEmotion(response.EmotionToDisplay, response.TriggerEvent);
                 break;
             case 2:
                 if (showDebugLogs)
-                    Debug.Log("Detected: A sad word!==========>2");
+                    Debug.Log("Detected: A sad word!");
                 response = emotionModel.CalculateEmotionalResponse("SadHeard");
                 emotionController.TryDisplayEmotion(response.EmotionToDisplay, response.TriggerEvent);
                 break;
             case 3:
                 if (showDebugLogs)
-                    Debug.Log("Detected: A happy word!==========>3  ");
+                    Debug.Log("Detected: A happy word!");
                 response = emotionModel.CalculateEmotionalResponse("HappyHeard");
                 emotionController.TryDisplayEmotion(response.EmotionToDisplay, response.TriggerEvent);
                 break;
             default:
             if (showDebugLogs)
-                    Debug.Log("Detected: Words of praise!==========>4");
+                    Debug.Log("Detected: Words of praise!");
                 response = emotionModel.CalculateEmotionalResponse("PraiseHeard");
                 emotionController.TryDisplayEmotion(response.EmotionToDisplay, response.TriggerEvent);
                 HatSelections = Random.Range(0, 4); // Reset to a random value between 0 and 3, this is if they keep clicking different hats

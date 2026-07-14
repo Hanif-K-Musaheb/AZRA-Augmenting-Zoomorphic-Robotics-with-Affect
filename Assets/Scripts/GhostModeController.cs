@@ -29,6 +29,7 @@ public class GhostModeController : MonoBehaviour
 
 	[Header("Fetch Settings")]
 	[SerializeField] private Transform carryPoint; // empty child GameObject on the ghost, e.g. positioned near its "mouth"/front
+	[SerializeField] private float MoveOnTimeThreshold = 10f;
 
 	
 
@@ -46,6 +47,8 @@ public class GhostModeController : MonoBehaviour
 	private bool fetchAllowed = false;
 	private bool retrieveAllowed = false;
 	private bool dropAllowed = false;
+	private float TimeSinceLastCommandInSequence = 0f;
+	private float RandomiseTimeRange; //used so that the retrieve command is not always exactly 3 seconds after the fetch command, but can be between 3 and 7 seconds
 
 
 	void Awake()
@@ -58,10 +61,16 @@ public class GhostModeController : MonoBehaviour
 		CacheOriginalPose();
 		if (followTarget == null && Camera.main != null) followTarget = Camera.main.transform;
 		if (startInGhostMode) EnterGhostModeImmediate();
+
+		RandomiseTimeRange = Random.Range(0f, 4f);
 	}
 
 	void Update()
 	{
+		TimeSinceLastCommandInSequence += Time.deltaTime;
+
+		// Debug.Log($"Time since last command in sequence: {TimeSinceLastCommandInSequence:F2} seconds");
+
 		if (allowKeyboardToggle)
 		{
 			bool hashApprox = Keyboard.current != null && Keyboard.current.shiftKey.isPressed && Keyboard.current[Key.Digit3].wasPressedThisFrame;
@@ -72,24 +81,24 @@ public class GhostModeController : MonoBehaviour
 			}
 		}
 
-		if (Keyboard.current != null)
-    	{
-			if (Keyboard.current[Key.Digit7].wasPressedThisFrame)
-			{
-				Debug.Log("Simulating voice command: FETCH");
-				AllowFetch();
-			}
-			if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
-			{
-				Debug.Log("Simulating voice command: RETRIEVE");
-				AllowRetrieve();
-			}
-			if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
-			{
-				Debug.Log("Simulating voice command: DROP");
-				AllowDrop();
-			}
-    	}
+		// if (Keyboard.current != null)
+    	// {
+		// 	if (Keyboard.current[Key.Digit7].wasPressedThisFrame)
+		// 	{
+		// 		Debug.Log("Simulating voice command: FETCH");
+		// 		AllowFetch();
+		// 	}
+		// 	if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
+		// 	{
+		// 		Debug.Log("Simulating voice command: RETRIEVE");
+		// 		AllowRetrieve();
+		// 	}
+		// 	if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
+		// 	{
+		// 		Debug.Log("Simulating voice command: DROP");
+		// 		AllowDrop();
+		// 	}
+    	// }
 
 		// Step 1: If we're idle and a frisbee appears, kick off the fetch sequence.
 		// This works whether Qoobo is currently a ghost or not - we enter ghost
@@ -102,6 +111,7 @@ public class GhostModeController : MonoBehaviour
 			{
 				StartCoroutine(EnterGhostMode());
 			}
+			TimeSinceLastCommandInSequence = 0f; // reset the timer for the fetch sequence
 		}
 
 		// Step 2: Only move/chase/return once we're actually a ghost and not
@@ -120,18 +130,22 @@ public class GhostModeController : MonoBehaviour
 					else
 					{
 						followTarget = frisbeeMarker.Current;
-						if (IsNearFrisbee(arQooboRoot.position, frisbeeMarker.Current.position, thresholdForCatch)&&retrieveAllowed)//change this for retrieval check
+						if (IsNearFrisbee(arQooboRoot.position, frisbeeMarker.Current.position, thresholdForCatch)&&
+						(retrieveAllowed||TimeSinceLastCommandInSequence>(MoveOnTimeThreshold+RandomiseTimeRange)))
+						//if retrieveAllowed is false, then we can pick up the frisbee after 3 seconds of chasing it
 						{
 							PickUpFrisbee(frisbeeMarker.Current);
 							fetchState = FetchState.ReturningToPlayer;
 							retrieveAllowed = false; // requires retrieve command every time//possible error here <--
+							TimeSinceLastCommandInSequence = 0f; // reset the timer for the fetch sequence
 						}
 					}
 					break;
 
 				case FetchState.ReturningToPlayer:
 					followTarget = playerTransform;
-					if (IsNearFrisbee(arQooboRoot.position, playerTransform.position, thresholdForCatch)&&dropAllowed)//reusing the IsNearFrisbee function to check if we are close enough to the player to drop the frisbee :/
+					if (IsNearFrisbee(arQooboRoot.position, playerTransform.position, thresholdForCatch)&&
+					(dropAllowed||TimeSinceLastCommandInSequence>(MoveOnTimeThreshold+RandomiseTimeRange)))//reusing the IsNearFrisbee function to check if we are close enough to the player to drop the frisbee :/
 					{
 						DropFrisbeeAndReturnToNormal();
 						dropAllowed = false;//<--possible error here, requires drop command every time
@@ -158,6 +172,13 @@ public class GhostModeController : MonoBehaviour
     {
         frisbeeRb.isKinematic = true; // disables gravity + physics forces
         frisbeeRb.velocity = Vector3.zero; // stop any leftover momentum from the throw also it is linearVelocity in newer versions of Unity
+    }
+
+	//this turns off the colliders so the player cant take the frisbee from Qoobo
+	Collider[] colliders = frisbee.GetComponentsInChildren<Collider>();
+    foreach(Collider col in colliders)
+    {
+        col.enabled = false;
     }
 
     frisbee.SetParent(attachPoint);
