@@ -10,3 +10,6 @@
 - working virtual screen playing the blue planet clip for ~7.5 min
 - working menu button
 - **BUGS:** blue planet clip not commited to here as file was to large, menu button goes white between clicks
+### v1.3.1
+- fixed tv button greying issue
+- deleted unecessary files
