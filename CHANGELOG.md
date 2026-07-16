@@ -18,4 +18,6 @@
 - changed donut logic so that any donut can be eaten and it the new script is attached to each prefab
 - added donut box
 - added a feature where when you press 6 qoobo will jump
+### v1.4.1
+- added spin press key 7 , roll press key 8 , flip press key 9
 
