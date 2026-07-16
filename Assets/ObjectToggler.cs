@@ -7,9 +7,7 @@ public class ObjectToggler : MonoBehaviour
     public Transform spawnPoint;           
     
     [Header("Cooldown Settings")]
-    [Tooltip("How many seconds you must wait before the button can be clicked again.")]
-    public float cooldownTime = 2.0f; // Set to 2 seconds
-
+    public float cooldownTime = 2.0f; 
     // Tracks the specific object we spawned
     private GameObject currentSpawnedObject;
     

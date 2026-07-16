@@ -31,7 +31,10 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private Transform carryPoint; // empty child GameObject on the ghost, e.g. positioned near its "mouth"/front
 	[SerializeField] private float MoveOnTimeThreshold = 10f;
 
-	
+	[Header("Jump Settings")]
+	[SerializeField] private float jumpHeight = 0.4f; // Meters to jump upward
+	[SerializeField] private float jumpDuration = 0.5f; // How long the jump takes
+	private bool isJumping = false;
 
 	private bool isGhost;
 	private bool isTransitioning;
@@ -81,24 +84,16 @@ public class GhostModeController : MonoBehaviour
 			}
 		}
 
-		// if (Keyboard.current != null)
-    	// {
-		// 	if (Keyboard.current[Key.Digit7].wasPressedThisFrame)
-		// 	{
-		// 		Debug.Log("Simulating voice command: FETCH");
-		// 		AllowFetch();
-		// 	}
-		// 	if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
-		// 	{
-		// 		Debug.Log("Simulating voice command: RETRIEVE");
-		// 		AllowRetrieve();
-		// 	}
-		// 	if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
-		// 	{
-		// 		Debug.Log("Simulating voice command: DROP");
-		// 		AllowDrop();
-		// 	}
-    	// }
+		if (Keyboard.current != null)
+		{
+			// New Jump Command
+			if (Keyboard.current[Key.Digit6].wasPressedThisFrame)
+			{
+				Debug.Log("Simulating command: JUMP");
+				TriggerJump();
+			}
+		}
+
 
 		// Step 1: If we're idle and a frisbee appears, kick off the fetch sequence.
 		// This works whether Qoobo is currently a ghost or not - we enter ghost
@@ -197,7 +192,7 @@ public class GhostModeController : MonoBehaviour
 		}
 
 		fetchState = FetchState.Idle;
-		StartCoroutine(ExitGhostMode()); // transition back to normal (non-ghost) mode
+		StartCoroutine(ExitGhostMode());
 	}
 
 
@@ -205,11 +200,8 @@ public class GhostModeController : MonoBehaviour
 
 	private bool IsNearFrisbee(Vector3 quooboPos, Vector3 frisbeePos, float threshold)//fix this to be universal distance check, not just for frisbee. change frisbee threshold
 	{
-		// Copy each position but force Y to 0, so only X and Z are compared
 		Vector3 quooboPosFlat = new Vector3(quooboPos.x, 0f, quooboPos.z);
 		Vector3 frisbeePosFlat = new Vector3(frisbeePos.x, 0f, frisbeePos.z);
-
-		// Distance between the two "flattened" points, ignoring height
 		float horizontalDist = Vector3.Distance(quooboPosFlat, frisbeePosFlat);
 
 		return horizontalDist <= threshold;
@@ -375,6 +367,68 @@ public class GhostModeController : MonoBehaviour
 	public void AllowDrop()
 	{
 		dropAllowed = true;
+	}
+
+	public void TriggerJump()
+	{
+		// Prevent overlapping jumps or jumping while transitioning states
+		if (isJumping || isTransitioning) return;
+
+		if (!isGhost)
+		{
+			// If not a ghost, enter ghost mode first, then jump
+			StartCoroutine(EnterGhostModeAndJump());
+		}
+		else
+		{
+			// If already a ghost, just jump
+			StartCoroutine(JumpRoutine());
+		}
+	}
+
+	private System.Collections.IEnumerator EnterGhostModeAndJump()
+	{
+		// Wait for the standard ghost transition to finish
+		yield return StartCoroutine(EnterGhostMode());
+		
+		// Then execute the jump
+		yield return StartCoroutine(JumpRoutine());
+	}
+
+	private System.Collections.IEnumerator JumpRoutine()
+	{
+		isJumping = true;
+		float elapsed = 0f;
+		Vector3 startPos = arQooboRoot.position;
+		Vector3 peakPos = startPos + Vector3.up * jumpHeight;
+
+		// Upward Phase (ease out)
+		while (elapsed < jumpDuration / 2f)
+		{
+			elapsed += Time.deltaTime;
+			float t = elapsed / (jumpDuration / 2f);
+			float easeT = Mathf.Sin(t * Mathf.PI * 0.5f); // Smooth deceleration at the top
+			
+			arQooboRoot.position = new Vector3(arQooboRoot.position.x, Mathf.Lerp(startPos.y, peakPos.y, easeT), arQooboRoot.position.z);
+			yield return null;
+		}
+
+		elapsed = 0f;
+		
+		// Downward Phase (ease in)
+		while (elapsed < jumpDuration / 2f)
+		{
+			elapsed += Time.deltaTime;
+			float t = elapsed / (jumpDuration / 2f);
+			float easeT = 1f - Mathf.Cos(t * Mathf.PI * 0.5f); // Smooth acceleration downward
+			
+			arQooboRoot.position = new Vector3(arQooboRoot.position.x, Mathf.Lerp(peakPos.y, startPos.y, easeT), arQooboRoot.position.z);
+			yield return null;
+		}
+
+		// Snap to exact original Y height to prevent floating point drift
+		arQooboRoot.position = new Vector3(arQooboRoot.position.x, startPos.y, arQooboRoot.position.z);
+		isJumping = false;
 	}
 
 	
