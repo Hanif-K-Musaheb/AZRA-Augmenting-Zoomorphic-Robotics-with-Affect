@@ -31,9 +31,14 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private Transform carryPoint; // empty child GameObject on the ghost, e.g. positioned near its "mouth"/front
 	[SerializeField] private float MoveOnTimeThreshold = 10f;
 
-	[Header("Jump Settings")]
+	[Header("Trick Settings")]
 	[SerializeField] private float jumpHeight = 0.4f; // Meters to jump upward
 	[SerializeField] private float jumpDuration = 0.5f; // How long the jump takes
+
+	[SerializeField] private float trickDuration = 1.0f; // Time to complete 1 full rotation
+	[SerializeField] private float flipHopHeight = 0.3f; // Small vertical hop so it doesn't clip the floor during a flip
+	
+	private bool isDoingTrick = false; // Flag to prevent overlapping animations
 	private bool isJumping = false;
 
 	private bool isGhost;
@@ -86,11 +91,25 @@ public class GhostModeController : MonoBehaviour
 
 		if (Keyboard.current != null)
 		{
-			// New Jump Command
 			if (Keyboard.current[Key.Digit6].wasPressedThisFrame)
 			{
 				Debug.Log("Simulating command: JUMP");
 				TriggerJump();
+			}
+			if (Keyboard.current[Key.Digit7].wasPressedThisFrame && !Keyboard.current.shiftKey.isPressed)
+			{
+				Debug.Log("Simulating command: SPIN");
+				TriggerSpin();
+			}
+			if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
+			{
+				Debug.Log("Simulating command: ROLL");
+				TriggerRoll();
+			}
+			if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
+			{
+				Debug.Log("Simulating command: FLIP");
+				TriggerFlip();
 			}
 		}
 
@@ -111,7 +130,7 @@ public class GhostModeController : MonoBehaviour
 
 		// Step 2: Only move/chase/return once we're actually a ghost and not
 		// mid-transition (rising up, shrinking, etc).
-		if (isGhost && !isTransitioning)
+		if (isGhost && !isTransitioning && !isDoingTrick && !isJumping)
 		{
 			switch (fetchState)
 			{
@@ -429,6 +448,62 @@ public class GhostModeController : MonoBehaviour
 		// Snap to exact original Y height to prevent floating point drift
 		arQooboRoot.position = new Vector3(arQooboRoot.position.x, startPos.y, arQooboRoot.position.z);
 		isJumping = false;
+	}
+
+	public void TriggerSpin()
+	{
+		if (!isDoingTrick && !isTransitioning && isGhost)
+			StartCoroutine(TrickRoutine(Vector3.up, 360f, false));
+	}
+
+	public void TriggerRoll()
+	{
+		if (!isDoingTrick && !isTransitioning && isGhost)
+			StartCoroutine(TrickRoutine(Vector3.forward, 360f, false));
+	}
+
+	public void TriggerFlip()
+	{
+		if (!isDoingTrick && !isTransitioning && isGhost)
+			StartCoroutine(TrickRoutine(Vector3.right, 360f, true));
+	}
+
+	private System.Collections.IEnumerator TrickRoutine(Vector3 axis, float totalAngle, bool addHop)
+	{
+		isDoingTrick = true;
+		float elapsed = 0f;
+		
+		// Cache starting position and rotation
+		Quaternion startRot = arQooboRoot.rotation;
+		Vector3 startPos = arQooboRoot.position;
+
+		while (elapsed < trickDuration)
+		{
+			elapsed += Time.deltaTime;
+			float t = elapsed / trickDuration;
+			
+			// SmoothStep gives the rotation a nice ease-in and ease-out feel
+			float easeT = Mathf.SmoothStep(0f, 1f, t);
+
+			// Apply rotation
+			arQooboRoot.rotation = startRot * Quaternion.AngleAxis(easeT * totalAngle, axis);
+
+			// Apply a small vertical hop for flips to prevent floor clipping
+			if (addHop)
+			{
+				// Sine wave creates a smooth arc: 0 -> 1 -> 0 based on the animation progress
+				float hopEase = Mathf.Sin(t * Mathf.PI);
+				arQooboRoot.position = new Vector3(startPos.x, startPos.y + (hopEase * flipHopHeight), startPos.z);
+			}
+
+			yield return null;
+		}
+
+		// Snap back exactly to the start state to prevent floating point drift over time
+		arQooboRoot.rotation = startRot;
+		if (addHop) arQooboRoot.position = startPos;
+		
+		isDoingTrick = false;
 	}
 
 	
