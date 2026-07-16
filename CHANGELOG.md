@@ -13,3 +13,9 @@
 ### v1.3.1
 - fixed tv button greying issue
 - deleted unecessary files
+### v1.4.0
+- added traing menu button
+- changed donut logic so that any donut can be eaten and it the new script is attached to each prefab
+- added donut box
+- added a feature where when you press 6 qoobo will jump
+
