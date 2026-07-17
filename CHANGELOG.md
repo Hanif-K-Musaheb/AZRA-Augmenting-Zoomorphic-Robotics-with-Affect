@@ -27,4 +27,6 @@
 - new script to test this in the editor as i havent hooked it up to vosk yet
 - new script called Qoobo brain where the model goes
 - new txt [System Prompt](https://github.com/Hanif-K-Musaheb/AZRA-Augmenting-Zoomorphic-Robotics-with-Affect/blob/main/Assets/Scripts/System%20Prompt.txt) this is the prompt the model sees before running very important, I am curently updating it with the newest system prompt i make to record that
+### v1.4.3
+- started on
 
