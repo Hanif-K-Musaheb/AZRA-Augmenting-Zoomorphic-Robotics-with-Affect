@@ -832,6 +832,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3068168033212314100}
     m_Modifications:
+    - target: {fileID: 773656483342944376, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
+      propertyPath: showDebugLogs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3679432325289749907, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
       propertyPath: m_Name
       value: DonutPrefab (2)
@@ -894,6 +898,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3068168033212314100}
     m_Modifications:
+    - target: {fileID: 773656483342944376, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
+      propertyPath: showDebugLogs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3679432325289749907, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
       propertyPath: m_Name
       value: DonutPrefab
@@ -956,6 +964,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3068168033212314100}
     m_Modifications:
+    - target: {fileID: 773656483342944376, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
+      propertyPath: showDebugLogs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3679432325289749907, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
       propertyPath: m_Name
       value: DonutPrefab (3)
@@ -1018,6 +1030,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3068168033212314100}
     m_Modifications:
+    - target: {fileID: 773656483342944376, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
+      propertyPath: showDebugLogs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3679432325289749907, guid: 54da6c066ceb5c24884d14cdb655f88e, type: 3}
       propertyPath: m_Name
       value: DonutPrefab (1)

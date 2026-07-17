@@ -14,14 +14,32 @@ public class TrainController : MonoBehaviour
     private GameObject currentSpawnedDonutBox;
     private float nextAllowedClickTime = 0f;
 
+    private bool isTraining = false;
+
     public void StartTraining()
     {
-         if (Time.time < nextAllowedClickTime)//Fixes the double click issue
+        if (Time.time < nextAllowedClickTime)//Fixes the double click issue
         {
             Debug.Log("Button is on cooldown, Ignoring click.");
             return; 
         }
         nextAllowedClickTime = Time.time + cooldownTime;
+
+        if (isTraining)
+        {
+            Destroy(currentSpawnedDonutBox);
+            isTraining = false;
+            if (showDebugLogs)
+            {
+                Debug.Log("Training stopped");
+            }
+            return;
+
+        }
+        else
+        {
+            isTraining = true;
+        }
 
         if (showDebugLogs)
         {
@@ -48,4 +66,10 @@ public class TrainController : MonoBehaviour
         }
 
     }
+
+    public bool IsTraining()
+    {
+        return isTraining;
+    }
+
 }

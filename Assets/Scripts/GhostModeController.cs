@@ -7,6 +7,7 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private Transform arQooboRoot; // AR robot root to move/scale
 	[SerializeField] private Renderer[] bodyRenderers; // Mesh renderers to adjust transparency
 	[SerializeField] private Transform followTarget; // Typically Camera.main transform; auto-filled if null
+	[SerializeField] private TrainController trainController; // TrainController for ghost mode actions only in training mode
 
 	[Header("Toggle")] 
 	[SerializeField] private bool startInGhostMode = false;
@@ -91,6 +92,9 @@ public class GhostModeController : MonoBehaviour
 
 		if (Keyboard.current != null)
 		{
+			if (trainController == null)return;
+			if (!trainController.IsTraining())return;
+			
 			if (Keyboard.current[Key.Digit6].wasPressedThisFrame)
 			{
 				Debug.Log("Simulating command: JUMP");
