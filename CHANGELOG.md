@@ -20,4 +20,11 @@
 - added a feature where when you press 6 qoobo will jump
 ### v1.4.1
 - added spin press key 7 , roll press key 8 , flip press key 9
+### v1.4.2
+- minor fix inplacement to tv made a tv spawn point so it woudnt sometime spawn behind a menu
+- added Llama-3.2-1B-instruct-Q4_K_M.gguf model [found here](https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/blob/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf)
+  - it is not committed to the repo because it is too big
+- new script to test this in the editor as i havent hooked it up to vosk yet
+- new script called Qoobo brain where the model goes
+- new txt System Prompt this is the prompt the model sees before running very important, I am curently updating it with the newest system prompt i make to record that
 
