@@ -8,6 +8,9 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private Renderer[] bodyRenderers; // Mesh renderers to adjust transparency
 	[SerializeField] private Transform followTarget; // Typically Camera.main transform; auto-filled if null
 	[SerializeField] private TrainController trainController; // TrainController for ghost mode actions only in training mode
+	
+	[Header("Debug Settings")]
+    [SerializeField] private bool showDebugLogs = true;
 
 	[Header("Toggle")] 
 	[SerializeField] private bool startInGhostMode = false;
@@ -38,6 +41,7 @@ public class GhostModeController : MonoBehaviour
 
 	[SerializeField] private float trickDuration = 1.0f; // Time to complete 1 full rotation
 	[SerializeField] private float flipHopHeight = 0.3f; // Small vertical hop so it doesn't clip the floor during a flip
+	
 	
 	private bool isDoingTrick = false; // Flag to prevent overlapping animations
 	private bool isJumping = false;
@@ -509,6 +513,39 @@ public class GhostModeController : MonoBehaviour
 		
 		isDoingTrick = false;
 	}
+
+	public float GetTrickDuration()
+	{
+		return trickDuration;
+	}
+
+	// public void TriggerJump()
+	// {
+	// 	// Prevent overlapping jumps or jumping while transitioning states
+	// 	if (isJumping || isTransitioning) return;
+
+	// 	if (!isGhost)
+	// 	{
+	// 		// If not a ghost, enter ghost mode first, then jump
+	// 		StartCoroutine(EnterGhostModeAndJump());
+	// 	}
+	// 	else
+	// 	{
+	// 		// If already a ghost, just jump
+	// 		StartCoroutine(JumpRoutine());
+	// 	}
+	// }
+
+	// private System.Collections.IEnumerator EnterGhostModeAndJump()
+	// {
+	// 	// Wait for the standard ghost transition to finish
+	// 	yield return StartCoroutine(EnterGhostMode());
+		
+	// 	// Then execute the jump
+	// 	yield return StartCoroutine(JumpRoutine());
+	// }
+
+	
 
 	
 }

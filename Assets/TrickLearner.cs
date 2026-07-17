@@ -1,10 +1,20 @@
 using UnityEngine;
 using LLMUnity; 
+using System.Collections;
 
 public class TrickLearner : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private GhostModeController ghostModeController; // Reference to the GhostModeController
+    
+    
+    [Header("Debug Settings")]
+    [SerializeField] private bool showDebugLogs = true;
+
     [Header("LLM Settings")]
     public LLMAgent llmAgent; // Drag your Qoobo_Brain (which has the LLMAgent) here in the Inspector
+    [SerializeField] private int maxMovesInSequence = 15; // Limit the number of moves in a single trick sequence for the LLM
+
     
     // The data container that Unity will convert the AI's JSON into
     [System.Serializable]
@@ -35,11 +45,55 @@ public class TrickLearner : MonoBehaviour
             Debug.Log($"Success! Qoobo learned '{newTrick.name}'.");
             Debug.Log($"The first move to execute is: {newTrick.move_set[0]}");
             
-            // This is where you will eventually send the move_set array to your animation controller!
+            StartCoroutine(HandleTrickJSON(newTrick.move_set));
         }
         catch (System.Exception e)
         {
             Debug.LogError("The AI failed to output valid JSON: " + e.Message);
         }
     }
+
+   
+
+private IEnumerator HandleTrickJSON(string[] moveSet)
+{
+    if (showDebugLogs)
+        Debug.Log("HandleTrickJSON called. This is where you would parse the JSON and trigger the appropriate trick.");
+    Debug.Log($"moveSet: {string.Join(", ", moveSet)}, length: {moveSet.Length}");
+
+    if (moveSet == null || moveSet.Length == 0 || moveSet.Length > maxMovesInSequence)
+    {
+        if (showDebugLogs)
+            Debug.LogWarning("Received empty or invalid move set data.");
+        yield break; 
+    }
+
+    ghostModeController.ToggleGhostMode();
+
+    foreach (string move in moveSet)
+    {
+        switch (move.ToLower())
+        {
+            case "jump":
+                ghostModeController.TriggerJump();
+                break;
+            case "spin":
+                ghostModeController.TriggerSpin();
+                break;
+            case "roll":
+                ghostModeController.TriggerRoll();
+                break;
+            case "flip":
+                ghostModeController.TriggerFlip();
+                break;
+            default:
+                if (showDebugLogs)
+                    Debug.LogWarning($"Unknown move: '{move}' ");
+                break;
+        }
+        yield return new WaitForSeconds(ghostModeController.GetTrickDuration());
+    }
+
+    ghostModeController.ToggleGhostMode();
+}
 }

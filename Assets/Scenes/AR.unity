@@ -16566,6 +16566,7 @@ MonoBehaviour:
   - {fileID: 341229972}
   followTarget: {fileID: 1222378854}
   trainController: {fileID: 799751485}
+  showDebugLogs: 1
   startInGhostMode: 0
   allowKeyboardToggle: 1
   toggleKeyFallback: 21
@@ -46615,7 +46616,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4499dd9fddbd9294b862b19250d67aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ghostModeController: {fileID: 799751476}
+  showDebugLogs: 1
   llmAgent: {fileID: 2018672789}
+  maxMovesInSequence: 20
 --- !u!114 &2018672789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47719,8 +47723,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trickLearner: {fileID: 2018672788}
-  fakeSpeechInput: hey qoobo spin around twice and then jump and we will call that
-    the happy dance
 --- !u!4 &2055297100
 Transform:
   m_ObjectHideFlags: 0
