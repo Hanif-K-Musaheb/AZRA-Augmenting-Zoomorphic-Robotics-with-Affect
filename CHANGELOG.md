@@ -30,4 +30,8 @@
 ### v1.4.3
 - started on the connection to from Qoobo brain to GhostMode to preform trick (in Editor)
 - currently works with the jump trick but not the spin trick I don't know why, also always has a JSON error with the LLM first
+### v1.4.4
+- all the moves work now translated from the mock vosk script input by the actual SLM
+- solved the 1 spin problem instead of 3, it was because i wasn't giving it enough time to go into ghostMode
+- however there is still some major problems: i asked it to the following ```fakeSpeechInput = "hey qoobo can you do two rolls for me then a flip";``` and it understood rolls to be a move not 2x roll but 2x rolls, flip was done correctly
 
