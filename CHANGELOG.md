@@ -27,4 +27,7 @@
 - new script to test this in the editor as i havent hooked it up to vosk yet
 - new script called Qoobo brain where the model goes
 - new txt [System Prompt](https://github.com/Hanif-K-Musaheb/AZRA-Augmenting-Zoomorphic-Robotics-with-Affect/blob/main/Assets/Scripts/System%20Prompt.txt) this is the prompt the model sees before running very important, I am curently updating it with the newest system prompt i make to record that
+### v1.4.3
+- started on the connection to from Qoobo brain to GhostMode to preform trick (in Editor)
+- currently works with the jump trick but not the spin trick I don't know why, also always has a JSON error with the LLM first
 
