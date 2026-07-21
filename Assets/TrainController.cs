@@ -18,7 +18,7 @@ public class TrainController : MonoBehaviour
 
     public void StartTraining()
     {
-        if (Time.time < nextAllowedClickTime)//Fixes the double click issue
+        if (Time.time < nextAllowedClickTime)//stops issue with AR double click
         {
             Debug.Log("Button is on cooldown, Ignoring click.");
             return; 

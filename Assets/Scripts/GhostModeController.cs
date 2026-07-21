@@ -101,22 +101,27 @@ public class GhostModeController : MonoBehaviour
 			
 			if (Keyboard.current[Key.Digit6].wasPressedThisFrame)
 			{
-				Debug.Log("Simulating command: JUMP");
+				if (showDebugLogs)
+					Debug.Log("Simulating command: JUMP");
+			
 				TriggerJump();
 			}
 			if (Keyboard.current[Key.Digit7].wasPressedThisFrame && !Keyboard.current.shiftKey.isPressed)
 			{
-				Debug.Log("Simulating command: SPIN");
+				if (showDebugLogs)
+					Debug.Log("Simulating command: SPIN");
 				TriggerSpin();
 			}
 			if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
 			{
-				Debug.Log("Simulating command: ROLL");
+				if (showDebugLogs)
+					Debug.Log("Simulating command: ROLL");
 				TriggerRoll();
 			}
 			if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
 			{
-				Debug.Log("Simulating command: FLIP");
+				if (showDebugLogs)
+					Debug.Log("Simulating command: FLIP");
 				TriggerFlip();
 			}
 		}
@@ -368,7 +373,8 @@ public class GhostModeController : MonoBehaviour
 			Color c = r.material.color;
 			c.a = alpha;
 			r.material.color = c;
-			Debug.Log($"Set renderer {i} alpha to: {alpha}");
+			if (showDebugLogs)
+				Debug.Log($"Set renderer {i} alpha to: {alpha}");
 		}
 	}
 
@@ -464,6 +470,23 @@ public class GhostModeController : MonoBehaviour
 			StartCoroutine(TrickRoutine(Vector3.up, 360f, false));
 	}
 
+	// public void TriggerSpin()
+	// {
+	// 	// Prevent overlapping jumps or jumping while transitioning states
+	// 	if (isJumping || isTransitioning) return;
+
+	// 	if (!isGhost)
+	// 	{
+	// 		// If not a ghost, enter ghost mode first, then jump
+	// 		StartCoroutine(EnterGhostModeAndJump());
+	// 	}
+	// 	else
+	// 	{
+	// 		// If already a ghost, just jump
+	// 		StartCoroutine(JumpRoutine());
+	// 	}
+	// }
+
 	public void TriggerRoll()
 	{
 		if (!isDoingTrick && !isTransitioning && isGhost)
@@ -519,33 +542,11 @@ public class GhostModeController : MonoBehaviour
 		return trickDuration;
 	}
 
-	// public void TriggerJump()
-	// {
-	// 	// Prevent overlapping jumps or jumping while transitioning states
-	// 	if (isJumping || isTransitioning) return;
 
-	// 	if (!isGhost)
-	// 	{
-	// 		// If not a ghost, enter ghost mode first, then jump
-	// 		StartCoroutine(EnterGhostModeAndJump());
-	// 	}
-	// 	else
-	// 	{
-	// 		// If already a ghost, just jump
-	// 		StartCoroutine(JumpRoutine());
-	// 	}
-	// }
-
-	// private System.Collections.IEnumerator EnterGhostModeAndJump()
-	// {
-	// 	// Wait for the standard ghost transition to finish
-	// 	yield return StartCoroutine(EnterGhostMode());
-		
-	// 	// Then execute the jump
-	// 	yield return StartCoroutine(JumpRoutine());
-	// }
-
-	
+	public float GetTransitionDuration()
+	{
+		return transitionDuration;
+	}	
 
 	
 }

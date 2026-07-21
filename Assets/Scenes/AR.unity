@@ -16566,7 +16566,7 @@ MonoBehaviour:
   - {fileID: 341229972}
   followTarget: {fileID: 1222378854}
   trainController: {fileID: 799751485}
-  showDebugLogs: 1
+  showDebugLogs: 0
   startInGhostMode: 0
   allowKeyboardToggle: 1
   toggleKeyFallback: 21

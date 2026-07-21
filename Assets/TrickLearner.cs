@@ -5,14 +5,13 @@ using System.Collections;
 public class TrickLearner : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GhostModeController ghostModeController; // Reference to the GhostModeController
-    
+    [SerializeField] private GhostModeController ghostModeController; 
     
     [Header("Debug Settings")]
     [SerializeField] private bool showDebugLogs = true;
 
     [Header("LLM Settings")]
-    public LLMAgent llmAgent; // Drag your Qoobo_Brain (which has the LLMAgent) here in the Inspector
+    public LLMAgent llmAgent; 
     [SerializeField] private int maxMovesInSequence = 15; // Limit the number of moves in a single trick sequence for the LLM
 
     
@@ -29,7 +28,8 @@ public class TrickLearner : MonoBehaviour
     {
         Debug.Log("Asking the AI to parse the trick...");
 
-        // FIX 1: Wipe the AI's memory so it treats every command as a brand new task <-- might need to get rid of this if you want the AI to remember previous commands and build on them
+        // this clears the chat history so the AI doesn't remember between calls, pehaps i need to change this so that it ca be better at learning over time
+        // but for now we will clear it each time for testing purposes.
         await llmAgent.ClearHistory();
 
         // We send the text to the LLMAgent and wait for it to generate the JSON text
@@ -58,8 +58,8 @@ public class TrickLearner : MonoBehaviour
 private IEnumerator HandleTrickJSON(string[] moveSet)
 {
     if (showDebugLogs)
-        Debug.Log("HandleTrickJSON called. This is where you would parse the JSON and trigger the appropriate trick.");
-    Debug.Log($"moveSet: {string.Join(", ", moveSet)}, length: {moveSet.Length}");
+        {Debug.Log("HandleTrickJSON called. This is where you would parse the JSON and trigger the appropriate trick.");
+        Debug.Log($"moveSet: {string.Join(", ", moveSet)}, length: {moveSet.Length}");}
 
     if (moveSet == null || moveSet.Length == 0 || moveSet.Length > maxMovesInSequence)
     {
@@ -69,6 +69,8 @@ private IEnumerator HandleTrickJSON(string[] moveSet)
     }
 
     ghostModeController.ToggleGhostMode();
+
+    yield return new WaitForSeconds(ghostModeController.GetTransitionDuration()); //so it can go into ghost mode before starting the trick
 
     foreach (string move in moveSet)
     {
@@ -93,7 +95,6 @@ private IEnumerator HandleTrickJSON(string[] moveSet)
         }
         yield return new WaitForSeconds(ghostModeController.GetTrickDuration());
     }
-
     ghostModeController.ToggleGhostMode();
 }
 }
