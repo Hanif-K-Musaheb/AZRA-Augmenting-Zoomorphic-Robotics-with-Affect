@@ -26,7 +26,8 @@ public class TrickLearner : MonoBehaviour
     // Call this method whenever Vosk finishes transcribing a sentence
     public async void ParseVoskSpeech(string voskTranscription)
     {
-        Debug.Log("Asking the AI to parse the trick...");
+        if(showDebugLogs)
+            Debug.Log("Asking the AI to parse the trick...");
 
         // this clears the chat history so the AI doesn't remember between calls, pehaps i need to change this so that it ca be better at learning over time
         // but for now we will clear it each time for testing purposes.
@@ -35,7 +36,8 @@ public class TrickLearner : MonoBehaviour
         // We send the text to the LLMAgent and wait for it to generate the JSON text
         string jsonResponse = await llmAgent.Chat(voskTranscription);
         
-        Debug.Log("AI Output: " + jsonResponse);
+        if(showDebugLogs)
+            Debug.Log("AI Output: " + jsonResponse);
 
         // Convert the raw JSON text string into the C# QooboMoveSet object
         try

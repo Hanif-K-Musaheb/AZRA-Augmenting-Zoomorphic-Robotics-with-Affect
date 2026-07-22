@@ -67,11 +67,6 @@ public class TrainController : MonoBehaviour
 
     }
 
-    
-
-
-
-
     public bool IsTraining()
     {
         return isTraining;

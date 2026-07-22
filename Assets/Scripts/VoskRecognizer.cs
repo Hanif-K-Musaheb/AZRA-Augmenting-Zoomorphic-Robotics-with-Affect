@@ -125,8 +125,8 @@ public class VoskRecognizer
                 if (partialPtr != IntPtr.Zero)
                 {
                     string partial = Marshal.PtrToStringAnsi(partialPtr);
-                    if (showDebugLogs)
-                        Debug.Log($"VoskRecognizer: Raw partial: {partial}");
+                    // if (showDebugLogs)
+                    //     Debug.Log($"VoskRecognizer: Raw partial: {partial}");
                 }
             }
         }

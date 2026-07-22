@@ -46640,10 +46640,10 @@ MonoBehaviour:
   _port: 13333
   numRetries: 5
   _grammar: 
-  numPredict: -1
+  numPredict: 32
   cachePrompt: 1
   seed: 0
-  temperature: 0.2
+  temperature: 0
   topK: 40
   topP: 0.9
   minP: 0.05
@@ -46663,19 +46663,21 @@ MonoBehaviour:
   overflowTargetRatio: 0.5
   overflowSummarizePrompt: 
   _slot: -1
-  _systemPrompt: "You are a strict data parser. Convert the user's speech into a
-    JSON object containing the trick \"name\" and the \"move_set\" array.\r\nThe
-    ONLY valid strings inside the move_set array are: \"spin\", \"jump\", \"roll\",
-    \"flip\". \r\nIf the user says to do a move multiple times, you must duplicate
-    that move in the array.\r\nNever write conversational text. Only output the raw
-    JSON brackets.\r\n\r\nExample 1: \r\nInput: \"hey qoobo spin around twice and
-    then jump and we will call that the happy dance\"\r\nOutput: {\"name\": \"happy
-    dance\", \"move_set\": [\"spin\", \"spin\", \"jump\"]}\r\n\r\nExample 2:\r\nInput:
-    \"spin jump spin jump and call it the dizzy dance\"\r\nOutput: {\"name\": \"dizzy
-    dance\", \"move_set\": [\"spin\", \"jump\", \"spin\", \"jump\"]}\r\n\r\nExample
-    3:\r\nInput: \"roll flip then spin three times name it the crazy combo\"\r\nOutput:
-    {\"name\": \"crazy combo\", \"move_set\": [\"roll\", \"flip\", \"spin\", \"spin\",
-    \"spin\"]}"
+  _systemPrompt: "You are a strict text classifier. Match the user's messy speech
+    to one of exactly four allowed trick sequences. \r\nDo not invent new sequences.
+    Output ONLY raw JSON.\r\n\r\nAllowed Sequences:\r\n1. Single Flip -> {\"name\":
+    \"single flip\", \"move_set\": [\"flip\"]}\r\n2. Double Flip -> {\"name\": \"double
+    flip\", \"move_set\": [\"flip\", \"flip\"]}\r\n3. Flip and Spin -> {\"name\":
+    \"flip spin\", \"move_set\": [\"flip\", \"spin\"]}\r\n4. Flip, Spin, Roll ->
+    {\"name\": \"flip spin roll\", \"move_set\": [\"flip\", \"spin\", \"roll\"]}\r\n\r\nIf
+    the input is unrelated or you are unsure, output: {\"name\": \"none\", \"move_set\":
+    []}\r\n\r\nExample 1:\r\nInput: \"qoobo do a flip\"\r\nOutput: {\"name\": \"single
+    flip\", \"move_set\": [\"flip\"]}\r\n\r\nExample 2:\r\nInput: \"uhh can you flip
+    twice please\"\r\nOutput: {\"name\": \"double flip\", \"move_set\": [\"flip\",
+    \"flip\"]}\r\n\r\nExample 3:\r\nInput: \"flip then spin and then do a roll\"\r\nOutput:
+    {\"name\": \"flip spin roll\", \"move_set\": [\"flip\", \"spin\", \"roll\"]}\r\n\r\nExample
+    4:\r\nInput: \"walk over to the tv\"\r\nOutput: {\"name\": \"none\", \"move_set\":
+    []}"
 --- !u!4 &2018672790
 Transform:
   m_ObjectHideFlags: 0
@@ -49495,17 +49497,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: trickLearner
+      value: 
+      objectReference: {fileID: 2018672788}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: monitorVolume
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: showDebugLogs
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: sceneController
       value: 
       objectReference: {fileID: 799751467}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: trainController
+      value: 
+      objectReference: {fileID: 799751485}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: emotionController
       value: 
@@ -49519,12 +49529,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 799751476}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: showSpeechProcessing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: useDefaultMicrophone
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.size
-      value: 10
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[8].groupName
@@ -49537,6 +49551,14 @@ PrefabInstance:
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].groupName
       value: Fetch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[11].groupName
+      value: Retrieve
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[12].groupName
+      value: Drop It
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[0].variations.Array.size
@@ -49576,7 +49598,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[11].variations.Array.size
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[12].variations.Array.size
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[0].variations.Array.data[5]
@@ -49712,27 +49742,75 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.data[1]
-      value: frisbee
+      value: catch
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.data[2]
-      value: get
+      value: get it
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.data[3]
-      value: go back
+      value: bring it
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.data[4]
-      value: return
+      value: go get it
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.data[5]
-      value: sit
+      value: retrieve it
       objectReference: {fileID: 0}
     - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: wordGroups.Array.data[10].variations.Array.data[6]
-      value: sit
+      value: frisbee
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[10].variations.Array.data[7]
+      value: frisbee fetch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[10].variations.Array.data[8]
+      value: frisbee get it
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[10].variations.Array.data[9]
+      value: frisbee bring it
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[11].variations.Array.data[0]
+      value: retrieve
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[11].variations.Array.data[1]
+      value: bring it back
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[11].variations.Array.data[2]
+      value: come back
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[12].variations.Array.data[0]
+      value: drop it
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[12].variations.Array.data[1]
+      value: let go
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[12].variations.Array.data[2]
+      value: release
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[12].variations.Array.data[3]
+      value: drop
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[10].variations.Array.data[10]
+      value: frisbee go get it
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674485458001461790, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+      propertyPath: wordGroups.Array.data[10].variations.Array.data[11]
+      value: frisbee retrieve it
       objectReference: {fileID: 0}
     - target: {fileID: 7823492866149849621, guid: 2297f865da1722043b726ec74af77b13, type: 3}
       propertyPath: thoughtSprites.Array.size

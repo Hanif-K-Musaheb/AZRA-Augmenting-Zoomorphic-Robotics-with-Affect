@@ -80,56 +80,18 @@ public class GhostModeController : MonoBehaviour
 
 	void Update()
 	{
+		HandleGhostModeToggleInput();// handles the manual editor toggle for ghost mode
+
+		HandleTrainingInput();// handles the special inputs in traing mode (spin, roll, flip, jump)
+
+		HandleFetchSequence();//handles the AR fetch sequence
+	}
+	//Update methods
+
+	private void HandleFetchSequence()
+	{
 		TimeSinceLastCommandInSequence += Time.deltaTime;
 
-		// Debug.Log($"Time since last command in sequence: {TimeSinceLastCommandInSequence:F2} seconds");
-
-		if (allowKeyboardToggle)
-		{
-			bool hashApprox = Keyboard.current != null && Keyboard.current.shiftKey.isPressed && Keyboard.current[Key.Digit3].wasPressedThisFrame;
-			bool fallbackKey = Keyboard.current != null && Keyboard.current[toggleKeyFallback].wasPressedThisFrame;
-			if (hashApprox || fallbackKey)
-			{
-				ToggleGhostMode();
-			}
-		}
-
-		if (Keyboard.current != null)
-		{
-			if (trainController == null)return;
-			if (!trainController.IsTraining())return;
-			
-			if (Keyboard.current[Key.Digit6].wasPressedThisFrame)
-			{
-				if (showDebugLogs)
-					Debug.Log("Simulating command: JUMP");
-			
-				TriggerJump();
-			}
-			if (Keyboard.current[Key.Digit7].wasPressedThisFrame && !Keyboard.current.shiftKey.isPressed)
-			{
-				if (showDebugLogs)
-					Debug.Log("Simulating command: SPIN");
-				TriggerSpin();
-			}
-			if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
-			{
-				if (showDebugLogs)
-					Debug.Log("Simulating command: ROLL");
-				TriggerRoll();
-			}
-			if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
-			{
-				if (showDebugLogs)
-					Debug.Log("Simulating command: FLIP");
-				TriggerFlip();
-			}
-		}
-
-
-		// Step 1: If we're idle and a frisbee appears, kick off the fetch sequence.
-		// This works whether Qoobo is currently a ghost or not - we enter ghost
-		// mode ourselves rather than requiring it to already be active.
 		if (fetchState == FetchState.Idle && fetchAllowed && frisbeeMarker.Current != null && frisbeeMarker.IsReleased && !isTransitioning)
 		{
 			fetchState = FetchState.ChasingFrisbee;
@@ -150,7 +112,6 @@ public class GhostModeController : MonoBehaviour
 				case FetchState.ChasingFrisbee:
 					if (frisbeeMarker.Current == null)
 					{
-						// Frisbee vanished (e.g. someone deleted it) - abandon fetch, go home
 						fetchState = FetchState.Idle;
 						followTarget = playerTransform;
 					}
@@ -189,8 +150,56 @@ public class GhostModeController : MonoBehaviour
 		}
 	}
 
+	private void HandleGhostModeToggleInput()
+	{
+		if (allowKeyboardToggle)
+		{
+			bool hashApprox = Keyboard.current != null && Keyboard.current.shiftKey.isPressed && Keyboard.current[Key.Digit3].wasPressedThisFrame;
+			bool fallbackKey = Keyboard.current != null && Keyboard.current[toggleKeyFallback].wasPressedThisFrame;
+			if (hashApprox || fallbackKey)
+			{
+				ToggleGhostMode();
+			}
+		}
+	}
+	
+	private void HandleTrainingInput()
+	{
+		if (Keyboard.current != null)return;
+		if (trainController == null)return;
+		if (!trainController.IsTraining())return;
+
+		if (Keyboard.current[Key.Digit6].wasPressedThisFrame)
+		{
+			if (showDebugLogs)
+				Debug.Log("Simulating command: JUMP");
+		
+			TriggerJump();
+		}
+		if (Keyboard.current[Key.Digit7].wasPressedThisFrame && !Keyboard.current.shiftKey.isPressed)
+		{
+			if (showDebugLogs)
+				Debug.Log("Simulating command: SPIN");
+			TriggerSpin();
+		}
+		if (Keyboard.current[Key.Digit8].wasPressedThisFrame)
+		{
+			if (showDebugLogs)
+				Debug.Log("Simulating command: ROLL");
+			TriggerRoll();
+		}
+		if (Keyboard.current[Key.Digit9].wasPressedThisFrame)
+		{
+			if (showDebugLogs)
+				Debug.Log("Simulating command: FLIP");
+			TriggerFlip();
+		}
+	}
+
+	
+
 	private void PickUpFrisbee(Transform frisbee)
-{
+	{
     Transform attachPoint = carryPoint != null ? carryPoint : arQooboRoot;
 
     // Stop physics from affecting the frisbee while it's being carried
@@ -409,12 +418,10 @@ public class GhostModeController : MonoBehaviour
 
 		if (!isGhost)
 		{
-			// If not a ghost, enter ghost mode first, then jump
 			StartCoroutine(EnterGhostModeAndJump());
 		}
 		else
 		{
-			// If already a ghost, just jump
 			StartCoroutine(JumpRoutine());
 		}
 	}
@@ -470,22 +477,6 @@ public class GhostModeController : MonoBehaviour
 			StartCoroutine(TrickRoutine(Vector3.up, 360f, false));
 	}
 
-	// public void TriggerSpin()
-	// {
-	// 	// Prevent overlapping jumps or jumping while transitioning states
-	// 	if (isJumping || isTransitioning) return;
-
-	// 	if (!isGhost)
-	// 	{
-	// 		// If not a ghost, enter ghost mode first, then jump
-	// 		StartCoroutine(EnterGhostModeAndJump());
-	// 	}
-	// 	else
-	// 	{
-	// 		// If already a ghost, just jump
-	// 		StartCoroutine(JumpRoutine());
-	// 	}
-	// }
 
 	public void TriggerRoll()
 	{

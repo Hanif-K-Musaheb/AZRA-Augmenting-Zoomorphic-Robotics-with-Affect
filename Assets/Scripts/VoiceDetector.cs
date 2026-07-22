@@ -10,6 +10,8 @@ public class VoiceDetector : MonoBehaviour
     [SerializeField] private EmotionModel emotionModel;
     [SerializeField] private SceneController sceneController;
     [SerializeField] private GhostModeController ghostModeController;
+    [SerializeField] private TrainController trainController;
+    [SerializeField] private TrickLearner trickLearner;
     [System.Serializable]
     public class WordGroup
     {
@@ -17,11 +19,18 @@ public class VoiceDetector : MonoBehaviour
         public List<string> variations = new List<string>();
     }
 
+
+    public class VoskTranscription
+    {
+        public string text;
+    }
+
     [Header("Settings")]
     [SerializeField] private bool useDefaultMicrophone = false;
     [SerializeField] private bool monitorAudio = false;
     [SerializeField] [Range(0f, 1f)] private float monitorVolume = 0.5f;
     [SerializeField] private bool showDebugLogs = false;  // Debug log toggle
+    [SerializeField] private bool showSpeechProcessing = false;
 
     [Header("Voice Recognition")]
     [SerializeField] private List<WordGroup> wordGroups = new List<WordGroup>();
@@ -73,83 +82,83 @@ public class VoiceDetector : MonoBehaviour
         }
     }
 
-    // private void InitializeWordGroups()
-    // {
-    //     if (wordGroups.Count == 0)
-    //     {
-    //         wordGroups.Add(new WordGroup { 
-    //             groupName = "Name", 
-    //             variations = new List<string> { "qoobo", "coobo", "kubo", "cubo", "koobo", "robot"}
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Happy",
-    //             variations = new List<string> { "happy", "happiness", "joy", "joyful", "glad" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Sad",
-    //             variations = new List<string> { "sad", "sadness", "unhappy", "sorrow", "sorrowful" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Angry",
-    //             variations = new List<string> { "angry", "anger", "mad", "furious", "rage" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Greeting",
-    //             variations = new List<string> { "hello", "hi", "hey", "greetings", "how are you doing", "good morning", "good afternoon", "good evening" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Farewell",
-    //             variations = new List<string> { "goodbye", "bye", "farewell", "see you" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Praise",
-    //             variations = new List<string> { "good boy", "good kitty", "good robot", "nice", "well done" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Food",
-    //             variations = new List<string> { "food", "hungary", "hungry", "eat", "eating", "ate", "ate it", "ate it all", "ate it all the time" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Walk",
-    //             variations = new List<string> { "walk", "work", "walking", "come", "follow", "follow me", "come with me" }
-    //         });
-    //         wordGroups.Add(new WordGroup {
-    //             groupName = "Rest",
-    //             variations = new List<string> { "rest", "resting", "stay", "stop", "go back", "return", "sit" }
-    //         });
-    //         // word groupd for the fetch sequence
-    //         wordGroups.Add(new WordGroup {//frisbee fetch command
-    //             groupName = "Fetch",
-    //             variations = new List<string> { "fetch", "get it", "bring it", "go get it", "retrieve it", "frisbee", "frisbee fetch", "frisbee get it", "frisbee bring it", "frisbee go get it", "frisbee retrieve it" }
-    //         });
-    //         wordGroups.Add(new WordGroup {//frisbee retrieve command
-    //             groupName = "Retrieve",
-    //             variations = new List<string> { "retrieve", "bring it back", "come back" }
-    //         });
-    //         wordGroups.Add(new WordGroup {//frisbee drop command
-    //             groupName = "Drop It",
-    //             variations = new List<string> { "drop it", "let go", "release", "drop" }
-    //         });
-    //     }
-    // }
+    private void InitializeWordGroups()
+    {
+        if (wordGroups.Count == 0)
+        {
+            wordGroups.Add(new WordGroup { 
+                groupName = "Name", 
+                variations = new List<string> { "qoobo", "coobo", "kubo", "cubo", "koobo", "robot"}
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Happy",
+                variations = new List<string> { "happy", "happiness", "joy", "joyful", "glad" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Sad",
+                variations = new List<string> { "sad", "sadness", "unhappy", "sorrow", "sorrowful" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Angry",
+                variations = new List<string> { "angry", "anger", "mad", "furious", "rage" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Greeting",
+                variations = new List<string> { "hello", "hi", "hey", "greetings", "how are you doing", "good morning", "good afternoon", "good evening" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Farewell",
+                variations = new List<string> { "goodbye", "bye", "farewell", "see you" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Praise",
+                variations = new List<string> { "good boy", "good kitty", "good robot", "nice", "well done" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Food",
+                variations = new List<string> { "food", "hungary", "hungry", "eat", "eating", "ate", "ate it", "ate it all", "ate it all the time" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Walk",
+                variations = new List<string> { "walk", "work", "walking", "come", "follow", "follow me", "come with me" }
+            });
+            wordGroups.Add(new WordGroup {
+                groupName = "Rest",
+                variations = new List<string> { "rest", "resting", "stay", "stop", "go back", "return", "sit" }
+            });
+            // word groupd for the fetch sequence
+            wordGroups.Add(new WordGroup {//frisbee fetch command
+                groupName = "Fetch",
+                variations = new List<string> { "fetch","catch", "get it", "bring it", "go get it", "retrieve it", "frisbee", "frisbee fetch", "frisbee get it", "frisbee bring it", "frisbee go get it", "frisbee retrieve it" }
+            });
+            wordGroups.Add(new WordGroup {//frisbee retrieve command
+                groupName = "Retrieve",
+                variations = new List<string> { "retrieve", "bring it back", "come back" }
+            });
+            wordGroups.Add(new WordGroup {//frisbee drop command
+                groupName = "Drop It",
+                variations = new List<string> { "drop it", "let go", "release", "drop" }
+            });
+        }
+    }
 
 
-private void InitializeWordGroups()
-{
-    AddGroupIfMissing("Name", "qoobo", "coobo", "kubo", "cubo", "koobo", "robot");
-    AddGroupIfMissing("Happy", "happy", "happiness", "joy", "joyful", "glad");
-    AddGroupIfMissing("Sad", "sad", "sadness", "unhappy", "sorrow", "sorrowful");
-    AddGroupIfMissing("Angry", "angry", "anger", "mad", "furious", "rage");
-    AddGroupIfMissing("Greeting", "hello", "hi", "hey", "greetings", "how are you doing", "good morning", "good afternoon", "good evening");
-    AddGroupIfMissing("Farewell", "goodbye", "bye", "farewell", "see you");
-    AddGroupIfMissing("Praise", "good boy", "good kitty", "good robot", "nice", "well done");
-    AddGroupIfMissing("Food", "food", "hungary", "hungry", "eat", "eating", "ate", "ate it", "ate it all", "ate it all the time");
-    AddGroupIfMissing("Walk", "walk", "work", "walking", "come", "follow", "follow me", "come with me");
-    AddGroupIfMissing("Rest", "rest", "resting", "stay", "stop", "go back", "return", "sit");
-    AddGroupIfMissing("Fetch","catch", "fetch", "get it", "bring it", "go get it", "retrieve it", "frisbee", "frisbee fetch", "frisbee get it", "frisbee bring it", "frisbee go get it", "frisbee retrieve it");
-    AddGroupIfMissing("Retrieve", "retrieve", "bring it back", "come back","deliver","heel","bring here","carry back");
-    AddGroupIfMissing("Drop It", "drop it", "let go", "release", "drop");
-}
+// private void InitializeWordGroups()
+// {
+//     AddGroupIfMissing("Name", "qoobo", "coobo", "kubo", "cubo", "koobo", "robot");
+//     AddGroupIfMissing("Happy", "happy", "happiness", "joy", "joyful", "glad");
+//     AddGroupIfMissing("Sad", "sad", "sadness", "unhappy", "sorrow", "sorrowful");
+//     AddGroupIfMissing("Angry", "angry", "anger", "mad", "furious", "rage");
+//     AddGroupIfMissing("Greeting", "hello", "hi", "hey", "greetings", "how are you doing", "good morning", "good afternoon", "good evening");
+//     AddGroupIfMissing("Farewell", "goodbye", "bye", "farewell", "see you");
+//     AddGroupIfMissing("Praise", "good boy", "good kitty", "good robot", "nice", "well done");
+//     AddGroupIfMissing("Food", "food", "hungary", "hungry", "eat", "eating", "ate", "ate it", "ate it all", "ate it all the time");
+//     AddGroupIfMissing("Walk", "walk", "work", "walking", "come", "follow", "follow me", "come with me");
+//     AddGroupIfMissing("Rest", "rest", "resting", "stay", "stop", "go back", "return", "sit");
+//     AddGroupIfMissing("Fetch","Catch","catch", "fetch", "get it", "bring it", "go get it", "retrieve it", "frisbee", "frisbee fetch", "frisbee get it", "frisbee bring it", "frisbee go get it", "frisbee retrieve it");
+//     AddGroupIfMissing("Retrieve", "retrieve", "bring it back", "come back","deliver","heel","bring here","carry back");
+//     AddGroupIfMissing("Drop It", "drop it", "let go", "release", "drop");
+// }
 
 private void AddGroupIfMissing(string groupName, params string[] variations)
 {
@@ -281,10 +290,60 @@ private void AddGroupIfMissing(string groupName, params string[] variations)
             }
 
             string result = vosk.ProcessAudio(newData);
+
+            // 1. FIRST check if we have a result
             if (!string.IsNullOrEmpty(result))
             {
-                ProcessRecognizedSpeech(result.ToLower());
+                try 
+                {
+                    // 2. NOW it is safe to parse the JSON
+                    VoskTranscription cleanData = JsonUtility.FromJson<VoskTranscription>(result);
+                    
+                    // 3. Make sure cleanData isn't null before reading from it
+                    if (cleanData != null)
+                    {
+                        string finalSpokenText = cleanData.text;
+
+                        // 4. Ensure the spoken text isn't empty
+                        if (!string.IsNullOrEmpty(finalSpokenText))
+                        {
+                            // Safely check the train controller
+                            if (trainController != null && trainController.IsTraining())
+                            {
+                                Debug.Log($"VOSK speech being sent to Qoobo brain: {finalSpokenText.ToLower()}");
+                                
+                                if (trickLearner != null) 
+                                    trickLearner.ParseVoskSpeech(finalSpokenText.ToLower());
+                            }
+                            else
+                            {
+                                // FIXED: Send finalSpokenText here, NOT result!
+                                ProcessRecognizedSpeech(finalSpokenText.ToLower());
+                            }
+                        }
+                    }
+                }
+
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("Vosk JSON Parse Error: " + e.Message);
             }
+        }
+
+            // string result = vosk.ProcessAudio(newData);
+
+            // VoskTranscription cleanData = JsonUtility.FromJson<VoskTranscription>(result);
+            // string finalSpokenText = cleanData.text;
+
+            // if (!string.IsNullOrEmpty(result))
+            // {
+            //     if(trainController.IsTraining()&&!string.IsNullOrEmpty(finalSpokenText)){
+            //         Debug.Log($"VOSK speech being sent to Qoobo brain: {finalSpokenText.ToLower()}");
+            //         trickLearner.ParseVoskSpeech(finalSpokenText.ToLower());}
+            //     else{
+            //         ProcessRecognizedSpeech(result.ToLower());}
+
+            // }
 
             lastProcessedPosition = currentPosition;
         }
@@ -297,10 +356,9 @@ private void AddGroupIfMissing(string groupName, params string[] variations)
         }
     }
 
-    private void ProcessRecognizedSpeech(string speech)
+    private void ProcessRecognizedSpeech(string speech)//////////////////////
     {
-        if (showDebugLogs)
-            Debug.Log($"Processing speech: {speech}");
+        
 
         // Check each word group for matches
         foreach (var group in wordGroups)
@@ -420,7 +478,7 @@ private void AddGroupIfMissing(string groupName, params string[] variations)
                 break;
             case "Retrieve":
                 if (showDebugLogs)
-                    Debug.Log("Detected: Retrieve command!<-------------- stage 1 retrieve heard AllowRetrieve() called");
+                    Debug.Log("Detected: Retrieve command!<xxxxxxxxxxxxxxxxx stage 2 retrieve heard AllowRetrieve() called");
                 
                 if (ghostModeController != null)
                 {
@@ -429,7 +487,7 @@ private void AddGroupIfMissing(string groupName, params string[] variations)
                 break;
             case "Drop It":
                 if (showDebugLogs)
-                    Debug.Log("Detected: Drop command!<-------------- stage 1 drop heard AllowDrop() called");
+                    Debug.Log("Detected: Drop command!<============= stage 3 drop heard AllowDrop() called");
                 
                 if (ghostModeController != null)
                 {
