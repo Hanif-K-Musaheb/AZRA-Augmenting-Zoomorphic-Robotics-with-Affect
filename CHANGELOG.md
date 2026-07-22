@@ -34,4 +34,8 @@
 - all the moves work now translated from the mock vosk script input by the actual SLM
 - solved the 1 spin problem instead of 3, it was because i wasn't giving it enough time to go into ghostMode
 - however there is still some major problems: i asked it to the following ```fakeSpeechInput = "hey qoobo can you do two rolls for me then a flip";``` and it understood rolls to be a move not 2x roll but 2x rolls, flip was done correctly
+### v1.4.5
+- "do a flip" works but is a little buggy but i reduced the scope of the SLM to only 4 tricks read the  [System Prompt](https://github.com/Hanif-K-Musaheb/AZRA-Augmenting-Zoomorphic-Robotics-with-Affect/blob/main/Assets/Scripts/System%20Prompt.txt)
+- come to a bit of a dead end with how accurate i can get this with VOSK being a bit of a bottle neck, will try to further this if spare time on the project but for now i am going to try and wizzard of oz it
+- make some fixes to bugs which caused the fetch feature to fail
 
