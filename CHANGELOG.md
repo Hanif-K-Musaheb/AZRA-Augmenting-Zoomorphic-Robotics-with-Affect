@@ -38,4 +38,8 @@
 - "do a flip" works but is a little buggy but i reduced the scope of the SLM to only 4 tricks read the  [System Prompt](https://github.com/Hanif-K-Musaheb/AZRA-Augmenting-Zoomorphic-Robotics-with-Affect/blob/main/Assets/Scripts/System%20Prompt.txt)
 - come to a bit of a dead end with how accurate i can get this with VOSK being a bit of a bottle neck, will try to further this if spare time on the project but for now i am going to try and wizzard of oz it
 - make some fixes to bugs which caused the fetch feature to fail
+### v1.5.0
+- completed wizzard of ozing the trick learner feature where, the study assesor will do the tricks using the a, b, x, y buttons. It will do 1 in the moveset i narrowed it down to so that it requires little skill and timing from the assesor.
+- also completed the emotion show feature has a working button does the emotions perhaps adding more in the future will improve it.
+- **There is a potential bug that the training could be on while the emotion show is on. I need to add something to make sure only one feature is active at a time**
 
