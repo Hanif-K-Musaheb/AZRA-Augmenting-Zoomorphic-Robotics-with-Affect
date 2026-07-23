@@ -54,49 +54,55 @@ public class TrickLearner : MonoBehaviour
             Debug.LogError("The AI failed to output valid JSON: " + e.Message);
         }
     }
-
-   
-
-private IEnumerator HandleTrickJSON(string[] moveSet)
-{
-    if (showDebugLogs)
-        {Debug.Log("HandleTrickJSON called. This is where you would parse the JSON and trigger the appropriate trick.");
-        Debug.Log($"moveSet: {string.Join(", ", moveSet)}, length: {moveSet.Length}");}
-
-    if (moveSet == null || moveSet.Length == 0 || moveSet.Length > maxMovesInSequence)
+    private IEnumerator HandleTrickJSON(string[] moveSet)
     {
         if (showDebugLogs)
-            Debug.LogWarning("Received empty or invalid move set data.");
-        yield break; 
-    }
+            {Debug.Log("HandleTrickJSON called. This is where you would parse the JSON and trigger the appropriate trick.");
+            Debug.Log($"moveSet: {string.Join(", ", moveSet)}, length: {moveSet.Length}");}
 
-    ghostModeController.ToggleGhostMode();
-
-    yield return new WaitForSeconds(ghostModeController.GetTransitionDuration()); //so it can go into ghost mode before starting the trick
-
-    foreach (string move in moveSet)
-    {
-        switch (move.ToLower())
+        if (moveSet == null || moveSet.Length == 0 || moveSet.Length > maxMovesInSequence)
         {
-            case "jump":
-                ghostModeController.TriggerJump();
-                break;
-            case "spin":
-                ghostModeController.TriggerSpin();
-                break;
-            case "roll":
-                ghostModeController.TriggerRoll();
-                break;
-            case "flip":
-                ghostModeController.TriggerFlip();
-                break;
-            default:
-                if (showDebugLogs)
-                    Debug.LogWarning($"Unknown move: '{move}' ");
-                break;
+            if (showDebugLogs)
+                Debug.LogWarning("Received empty or invalid move set data.");
+            yield break; 
         }
-        yield return new WaitForSeconds(ghostModeController.GetTrickDuration());
+
+        ghostModeController.ToggleGhostMode();
+
+        yield return new WaitForSeconds(ghostModeController.GetTransitionDuration()); //so it can go into ghost mode before starting the trick
+
+        foreach (string move in moveSet)
+        {
+            switch (move.ToLower())
+            {
+                case "jump":
+                    ghostModeController.TriggerJump();
+                    break;
+                case "spin":
+                    ghostModeController.TriggerSpin();
+                    break;
+                case "roll":
+                    ghostModeController.TriggerRoll();
+                    break;
+                case "flip":
+                    ghostModeController.TriggerFlip();
+                    break;
+                default:
+                    if (showDebugLogs)
+                        Debug.LogWarning($"Unknown move: '{move}' ");
+                    break;
+            }
+            yield return new WaitForSeconds(ghostModeController.GetTrickDuration());
+        }
+        ghostModeController.ToggleGhostMode();
     }
-    ghostModeController.ToggleGhostMode();
-}
+
+    public void HandleRemoteInput(string[] moveSet)
+    {
+        StartCoroutine(HandleTrickJSON(moveSet));
+    }
+
+
+
+
 }

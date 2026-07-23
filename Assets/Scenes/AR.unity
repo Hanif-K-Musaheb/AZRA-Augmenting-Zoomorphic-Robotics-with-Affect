@@ -1568,7 +1568,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1095924324}
   m_Father: {fileID: 539463610}
@@ -3492,7 +3492,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &177471296
 Transform:
   m_ObjectHideFlags: 0
@@ -4364,7 +4364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &233897078
 Transform:
   m_ObjectHideFlags: 0
@@ -5121,7 +5121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &268672911
 Transform:
   m_ObjectHideFlags: 0
@@ -6668,7 +6668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &326757611
 Transform:
   m_ObjectHideFlags: 0
@@ -7058,7 +7058,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &336603772
 Transform:
   m_ObjectHideFlags: 0
@@ -12609,7 +12609,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &612888920
 Transform:
   m_ObjectHideFlags: 0
@@ -13115,7 +13115,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &627386316
 Transform:
   m_ObjectHideFlags: 0
@@ -13681,7 +13681,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 933222683}
   m_Father: {fileID: 1436230748}
@@ -16287,6 +16287,7 @@ GameObject:
   - component: {fileID: 799751484}
   - component: {fileID: 799751485}
   - component: {fileID: 799751486}
+  - component: {fileID: 799751487}
   m_Layer: 0
   m_Name: ScriptHost
   m_TagString: Untagged
@@ -16798,6 +16799,20 @@ MonoBehaviour:
   audioController: {fileID: 799751473}
   emotionModel: {fileID: 799751474}
   emotionController: {fileID: 799751471}
+--- !u!114 &799751487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799751465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 310a1add2607bfc4781e6923d8b00e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trainController: {fileID: 799751485}
+  trickLearner: {fileID: 2018672788}
 --- !u!1 &799816403
 GameObject:
   m_ObjectHideFlags: 0
@@ -24283,7 +24298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1061411833
 Transform:
   m_ObjectHideFlags: 0
@@ -24727,7 +24742,7 @@ MonoBehaviour:
   virtualGreenScreenApplyDepthCulling: 0
   virtualGreenScreenDepthTolerance: 0.2
   mrcActivationMode: 0
-  launchSimultaneousHandsControllersOnStartup: 0
+  launchSimultaneousHandsControllersOnStartup: 1
   isInsightPassthroughEnabled: 1
   shouldBoundaryVisibilityBeSuppressed: 0
   requestBodyTrackingPermissionOnStartup: 0
@@ -24745,7 +24760,7 @@ MonoBehaviour:
   LateControllerUpdate: 1
   LateLatching: 0
   controllerDrivenHandPosesType: 0
-  SimultaneousHandsAndControllersEnabled: 0
+  SimultaneousHandsAndControllersEnabled: 1
   _readOnlyWideMotionModeHandPosesEnabled: 0
   wideMotionModeHandPosesEnabled: 0
   dynamicResolutionVersion: 1
@@ -24895,7 +24910,7 @@ MonoBehaviour:
   _updateMode: 4
   _updateAfter: {fileID: 0}
   _iModifyDataFromSourceMono: {fileID: 261764137}
-  _applyModifier: 1
+  _applyModifier: 0
   _wristPositionLockCurve:
     _animationCurve:
       serializedVersion: 2
@@ -25338,7 +25353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1095987795
 Transform:
   m_ObjectHideFlags: 0
@@ -29597,7 +29612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1270953811
 Transform:
   m_ObjectHideFlags: 0
@@ -34386,7 +34401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1467477815
 Transform:
   m_ObjectHideFlags: 0
@@ -35843,7 +35858,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1524470475
 Transform:
   m_ObjectHideFlags: 0
@@ -42356,7 +42371,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1828902050
 Transform:
   m_ObjectHideFlags: 0
@@ -42561,7 +42576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1847113125
 Transform:
   m_ObjectHideFlags: 0
@@ -43623,7 +43638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1898131032
 Transform:
   m_ObjectHideFlags: 0
@@ -46422,7 +46437,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2009817186
 Transform:
   m_ObjectHideFlags: 0
@@ -47176,7 +47191,7 @@ MonoBehaviour:
   _updateMode: 4
   _updateAfter: {fileID: 0}
   _iModifyDataFromSourceMono: {fileID: 1848291534}
-  _applyModifier: 1
+  _applyModifier: 0
   _wristPositionLockCurve:
     _animationCurve:
       serializedVersion: 2
