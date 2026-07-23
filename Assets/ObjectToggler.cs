@@ -16,18 +16,7 @@ public class ObjectToggler : MonoBehaviour
 
     public void ToggleObject()
     {
-        // 1. Check if enough time has passed since the last click
-        // Time.time gives us the total seconds since the game started running
-        if (Time.time < nextAllowedClickTime)
-        {
-            Debug.Log("Button is on cooldown! Ignoring click.");
-            return; // This immediately stops the code and prevents the double-click
-        }
-
-        // 2. We are allowed to click! Set the timer for the next allowed click
-        nextAllowedClickTime = Time.time + cooldownTime;
-
-        // 3. Run our normal spawn/destroy logic
+     
         if (currentSpawnedObject == null)
         {
             // Spawn it
@@ -48,6 +37,15 @@ public class ObjectToggler : MonoBehaviour
             Destroy(currentSpawnedObject);
             currentSpawnedObject = null; 
             Debug.Log("Prefab destroyed!");
+        }
+    }
+
+    public void Deactivate()
+    {
+        if(currentSpawnedObject != null)
+        {
+            Destroy(currentSpawnedObject);
+            currentSpawnedObject = null; 
         }
     }
 }

@@ -69,12 +69,12 @@ public class FrisbeeController : MonoBehaviour
 
     public void SpawnFrisbee()
     {
-        if (Time.time - lastSpawnTime < spawnCooldown)
-        {
-            if (showDebugLogs) Debug.Log("FrisbeeController: Spawn cooldown active. Please wait before spawning another frisbee.");
-            return;
-        }
-        lastSpawnTime = Time.time;
+        // if (Time.time - lastSpawnTime < spawnCooldown)
+        // {
+        //     if (showDebugLogs) Debug.Log("FrisbeeController: Spawn cooldown active. Please wait before spawning another frisbee.");
+        //     return;
+        // }
+        // lastSpawnTime = Time.time;
 
         if (frisbeePrefab == null)
         {
@@ -125,10 +125,25 @@ public class FrisbeeController : MonoBehaviour
         if (showDebugLogs) Debug.Log("FrisbeeController: Frisbee spawned successfully!");
     }
 
-    // Public method explicitly named for UI button events
+  
     public void OnSpawnButtonClicked()
     {
         if (showDebugLogs) Debug.Log("FrisbeeController: Spawn UI button clicked");
         SpawnFrisbee();
     }
+
+    public void Deactivate() 
+    {
+        if (currentFrisbee != null)
+        {
+            Destroy(currentFrisbee);
+            currentFrisbee = null; 
+        }
+
+        if (showDebugLogs) 
+        {
+            Debug.Log("FrisbeeController: frisbee destroyed");
+        }
+    }
+
 }

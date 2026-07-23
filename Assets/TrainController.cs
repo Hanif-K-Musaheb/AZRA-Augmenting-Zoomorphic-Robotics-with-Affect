@@ -14,31 +14,25 @@ public class TrainController : MonoBehaviour
     private GameObject currentSpawnedDonutBox;
     private float nextAllowedClickTime = 0f;
 
-    private bool isTraining = false;
+    private bool is_Training = false;
 
     public void StartTraining()
     {
-        if (Time.time < nextAllowedClickTime)//stops issue with AR double click
-        {
-            Debug.Log("Button is on cooldown, Ignoring click.");
-            return; 
-        }
-        nextAllowedClickTime = Time.time + cooldownTime;
+        // if (Time.time < nextAllowedClickTime)//stops issue with AR double click
+        // {
+        //     Debug.Log("Button is on cooldown, Ignoring click.");
+        //     return; 
+        // }
+        // nextAllowedClickTime = Time.time + cooldownTime;
 
-        if (isTraining)
+        if (is_Training)
         {
-            Destroy(currentSpawnedDonutBox);
-            isTraining = false;
-            if (showDebugLogs)
-            {
-                Debug.Log("Training stopped");
-            }
+            Deactivate();
             return;
-
         }
         else
         {
-            isTraining = true;
+            is_Training = true;
         }
 
         if (showDebugLogs)
@@ -67,9 +61,22 @@ public class TrainController : MonoBehaviour
 
     }
 
+    public void Deactivate()
+    {
+        if (!is_Training) return;
+
+        Destroy(currentSpawnedDonutBox);
+        is_Training = false;
+
+        if (showDebugLogs)
+        {
+            Debug.Log("Training stopped");
+        }
+    }
+
     public bool IsTraining()
     {
-        return isTraining;
+        return is_Training;
     }
 
 }

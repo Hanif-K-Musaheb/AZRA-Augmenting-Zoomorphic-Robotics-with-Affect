@@ -16,7 +16,7 @@ public class TrickLearner : MonoBehaviour
 
     
     // The data container that Unity will convert the AI's JSON into
-    [System.Serializable]
+    
     public class QooboMoveSet
     {
         public string name;

@@ -17,22 +17,17 @@ public class EmotionShowController : MonoBehaviour
 
     public void StartEmotionShow()
     {
-        if (Time.time < nextAllowedClickTime)//stops issue with AR double click
-        {
-            Debug.Log("Button is on cooldown, Ignoring click.");
-            return; 
-        }
-        nextAllowedClickTime = Time.time + cooldownTime;
+        // if (Time.time < nextAllowedClickTime)//stops issue with AR double click
+        // {
+        //     Debug.Log("Button is on cooldown, Ignoring click.");
+        //     return; 
+        // }
+        // nextAllowedClickTime = Time.time + cooldownTime;
 
         if (isEmotionShowActive)
         {
-            isEmotionShowActive = false;
-            if (showDebugLogs)
-            {
-                Debug.Log("Emotion Show has stopped");
-            }
+            Deactivate();
             return;
-
         }
         else
         {
@@ -41,7 +36,7 @@ public class EmotionShowController : MonoBehaviour
 
         if (showDebugLogs)
         {
-            Debug.Log("Emotion Show started");
+            Debug.Log("Emotion Show started<---------------------------------");
         }
     }
 
@@ -81,6 +76,19 @@ public class EmotionShowController : MonoBehaviour
 
 
         emotionController.TryDisplayEmotion(targetEmotion, "WoZ_Ladder_Override");
+    }
+
+    public void Deactivate()
+    {
+        if(!isEmotionShowActive)return;
+
+        isEmotionShowActive = false;
+        emotionController.TryDisplayEmotion("Neutral", "WoZ_Ladder_Override");
+
+        if (showDebugLogs)
+        {
+            Debug.Log("Emotion Show has stopped");
+        }
     }
   
 }
