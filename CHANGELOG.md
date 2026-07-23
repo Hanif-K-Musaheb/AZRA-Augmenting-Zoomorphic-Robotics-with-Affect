@@ -42,4 +42,7 @@
 - completed wizzard of ozing the trick learner feature where, the study assesor will do the tricks using the a, b, x, y buttons. It will do 1 in the moveset i narrowed it down to so that it requires little skill and timing from the assesor.
 - also completed the emotion show feature has a working button does the emotions perhaps adding more in the future will improve it.
 - **There is a potential bug that the training could be on while the emotion show is on. I need to add something to make sure only one feature is active at a time**
+### v1.5.1
+- **added menuController** this will fix bug where feature overlap now when you select a button on the menu it turns off other overlapping features i.e training and emotionShow
+- **modified emotionShow, FrisbeeController, ObjectToggler, TrainController** all to accomodate the new MenuController
 
