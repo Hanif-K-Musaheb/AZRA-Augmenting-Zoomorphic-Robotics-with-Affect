@@ -101,8 +101,4 @@ public class TrickLearner : MonoBehaviour
     {
         StartCoroutine(HandleTrickJSON(moveSet));
     }
-
-
-
-
 }

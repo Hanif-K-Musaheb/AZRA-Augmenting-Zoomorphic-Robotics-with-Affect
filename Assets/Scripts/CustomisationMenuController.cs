@@ -175,8 +175,6 @@ public class CustomisationMenuController : MonoBehaviour
                 button.interactable = interactable;
         }
     }
-    
-
 }
    
 
