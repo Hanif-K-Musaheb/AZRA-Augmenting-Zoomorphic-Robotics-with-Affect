@@ -45,4 +45,10 @@
 ### v1.5.1
 - **added menuController** this will fix bug where feature overlap now when you select a button on the menu it turns off other overlapping features i.e training and emotionShow
 - **modified emotionShow, FrisbeeController, ObjectToggler, TrainController** all to accomodate the new MenuController
+### v1.5.2
+- **added EndOfFeatureQuestionaire** this creates a window infront of the user so they can assess the feature using the likert questions submitted to the ethics board
+- **modified MenuController** now it works with all 5 features added (emotionShow, train, customisation, TV, frisbee), I redid so that there is now an internal current feature which is useful for record purposes and standardising the codebase a bit
+- **modified WoZManager** so that I can just click the joy stick down and the questionaire will appear.
+
+
 
