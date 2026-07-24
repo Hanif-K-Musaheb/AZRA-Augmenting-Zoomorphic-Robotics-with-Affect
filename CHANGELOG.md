@@ -50,5 +50,9 @@
 - **modified MenuController** now it works with all 5 features added (emotionShow, train, customisation, TV, frisbee), I redid so that there is now an internal current feature which is useful for record purposes and standardising the codebase a bit
 - **modified WoZManager** so that I can just click the joy stick down and the questionaire will appear.
 
+### v1.5.3
+-**added FeatureSignController** adds a sign to all the new feature explaining what they are and how to use them
+
+
 
 
