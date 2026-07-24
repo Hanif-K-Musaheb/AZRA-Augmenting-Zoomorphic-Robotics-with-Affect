@@ -7,6 +7,8 @@ public class WoZManager : MonoBehaviour
     [SerializeField] private TrickLearner trickLearner;
     [SerializeField] private EmotionShowController emotionShowController;
     [SerializeField] private EmotionController emotionController;
+    [SerializeField] private EndOfFeatureQuesitonaire endOfFeatureQuesitonaire;
+    [SerializeField] private MenuController menuController;
 
     private int EmotionSelection = 1;//starts the emotion gloomy
 
@@ -14,12 +16,14 @@ public class WoZManager : MonoBehaviour
     {
         TrainingRemoteInput();
         EmotionModelRemoteController();
-        
+        FrisbeeRemoteController();
+        TVRemoteController();
+        CustomisationRemoteController();
     }
-
     private void TrainingRemoteInput()
     {
-        if(!trainController.IsTraining()) {return;}
+        string currentFeature = menuController.GetCurrentFeature();
+        if(currentFeature!="train") {return;}
 
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))// A button Right
         {
@@ -40,45 +44,68 @@ public class WoZManager : MonoBehaviour
         {
             trickLearner.HandleRemoteInput(new string[] { "flip", "spin", "roll" });
         }
+        
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
+        {
+            endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
+        }
+    }
+    private void EmotionModelRemoteController()
+    {
+        string currentFeature = menuController.GetCurrentFeature();
+        if(currentFeature!="emotion show") {return;}
+    
+        if (!emotionController.GetCanDisplayEmotion()){return;}
+        
+        // B button Right (Move up the ladder emotions get better)
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
+        {
+            EmotionSelection++;
+            EmotionSelection = Mathf.Clamp(EmotionSelection, 1, 5); 
+            emotionShowController.UpdateEmotionShow(EmotionSelection);
+        }
+        
+        // A button Right (Move down the ladder emotions get worse)
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            EmotionSelection--;
+            EmotionSelection = Mathf.Clamp(EmotionSelection, 1, 5);
+            emotionShowController.UpdateEmotionShow(EmotionSelection);
+        }
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
+        {
+            endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
+        }
+    }
+    private void FrisbeeRemoteController()
+    {
+        string currentFeature = menuController.GetCurrentFeature();
+        if(currentFeature!="frisbee") {return;}
+
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
+        {
+            endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
+        }
+    }
+    private void TVRemoteController()
+    {
+        string currentFeature = menuController.GetCurrentFeature();
+        if(currentFeature!="TV") {return;}
+
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
+        {
+            endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
+        }
     }
 
-private void EmotionModelRemoteController()
-{
-    if(!emotionShowController.IsEmotionShowActive()) {return;}
-  
-    if (!emotionController.GetCanDisplayEmotion()){return;}
-    
-    // B button Right (Move up the ladder emotions get better)
-    if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
+    private void CustomisationRemoteController()
     {
-        EmotionSelection++;
-        EmotionSelection = Mathf.Clamp(EmotionSelection, 1, 5); 
-        emotionShowController.UpdateEmotionShow(EmotionSelection);
-    }
-    
-    // A button Right (Move down the ladder emotions get worse)
-    if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
-    {
-        EmotionSelection--;
-        EmotionSelection = Mathf.Clamp(EmotionSelection, 1, 5);
-        emotionShowController.UpdateEmotionShow(EmotionSelection);
+        string currentFeature = menuController.GetCurrentFeature();
+        if(currentFeature!="customisation") {return;}
+
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
+        {
+            endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
+        }
     }
 }
-
-
-
-
-}
-
-
-// if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
-// {
-//     Debug.Log("Right Joystick was clicked down!");
-//     // Put your Qoobo command here
-// }
-
-// if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.LTouch))
-// {
-//     Debug.Log("Left Joystick was clicked down!");
-//     // Put your Qoobo command here
-// }

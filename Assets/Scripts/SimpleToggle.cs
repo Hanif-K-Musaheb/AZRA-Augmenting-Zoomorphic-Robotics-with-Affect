@@ -53,4 +53,20 @@ public class SimpleToggle : MonoBehaviour
     {
         ToggleObjectActiveWithMenuPositioning();
     }
+       public void ActivateCusomistionWindow()
+    {
+        gameObject.SetActive(true);
+        
+        // If the object is now active, call TeleportToUser from MenuFollowSystem
+        if (menuFollowSystem != null)
+        {
+            menuFollowSystem.TeleportToUser();
+        }
+        
+    }
+    public void Deactivate()
+    {
+        gameObject.SetActive(false);
+
+    }
 }

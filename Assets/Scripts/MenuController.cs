@@ -9,10 +9,12 @@ public class MenuController : MonoBehaviour
     public EmotionShowController emotionShowController;
     public ObjectToggler TVcontroller;
     public FrisbeeController frisbeeController;
+    public SimpleToggle CustomisationWindowToggle;
 
 
     private float nextAllowedClickTime=0;
     private float globalCooldown = 0;
+    private string currentFeature;
 
     public void OnSelectTrainingFeature()
     {
@@ -22,7 +24,8 @@ public class MenuController : MonoBehaviour
         TurnOffAllFeatures();
 
         trainController.StartTraining(); 
-        Debug.Log("Switched to Training Mode.");
+        currentFeature="train";
+   
     }
 
     
@@ -34,8 +37,9 @@ public class MenuController : MonoBehaviour
 
         TurnOffAllFeatures();
 
-        emotionShowController.StartEmotionShow(); 
-        Debug.Log("Switched to Emotion Show Mode.");
+        emotionShowController.StartEmotionShow();
+        currentFeature="emotion show"; 
+       
     }
 
     public void OnSelectTVFeature()
@@ -47,7 +51,8 @@ public class MenuController : MonoBehaviour
         TurnOffAllFeatures();
 
         TVcontroller.ToggleObject();
-        Debug.Log("Switched to Emotion Show Mode.");
+        currentFeature="TV";
+      
     }
 
     public void OnSelectFrisbeeFeature()
@@ -57,21 +62,36 @@ public class MenuController : MonoBehaviour
         TurnOffAllFeatures();
         
         frisbeeController.OnSpawnButtonClicked();
-        Debug.Log("Switched to Emotion Show Mode.");
+        currentFeature="frisbee";
+      
         
     }
 
+    public void OnSelectCustimisationFeature()
+    {
+        if (Time.time < nextAllowedClickTime) return; 
+        nextAllowedClickTime = Time.time + globalCooldown;
+        TurnOffAllFeatures();
 
+        CustomisationWindowToggle.ActivateCusomistionWindow();
+        currentFeature="customisation";
+    }
 
-    
     private void TurnOffAllFeatures()
     {
+        currentFeature=null;
         if (trainController != null) trainController.Deactivate();
         if (emotionShowController != null) emotionShowController.Deactivate();
         if (TVcontroller != null) TVcontroller.Deactivate();
         if (frisbeeController != null) frisbeeController.Deactivate();
+        if (CustomisationWindowToggle !=null) CustomisationWindowToggle.Deactivate();
         
         // Add other controllers here as you build them
+    }
+
+    public string GetCurrentFeature()
+    {
+        return currentFeature;
     }
 
  
