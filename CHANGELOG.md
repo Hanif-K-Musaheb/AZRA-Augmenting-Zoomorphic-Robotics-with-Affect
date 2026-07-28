@@ -61,6 +61,9 @@
 ### v1.5.5
 - **modified EmotionShowController** so that it isolates the emotions of qoobo to just WoZ inputs, made it so there is a neutral face emotions, made it so it actually effects the emotions not just short bursts, added a donut box to emotion show
 - **fixed bug** - fixed the donut box bug now it will spawn in relative to Qoobo not at a specific spawn point
+### v1.5.6
+- **modified WoZ manager** so that you can press the hand grip triggers to make Qoobo show small positive or negative emotions used for training and emotion show
+- **modified emotionshow** so gloomy was the starting point instead of sad
 
 
 
