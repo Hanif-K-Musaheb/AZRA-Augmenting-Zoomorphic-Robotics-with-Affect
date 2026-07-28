@@ -93,3 +93,6 @@ Assets/BluePlanetClip.MP4
 # Ignore LLaMA files
 *.gguf
 Assets/StreamingAssets/LlamaLib-v2.0.5/*
+
+LMUnityBuild/
+Assets/Plugins/Android/LLMUnity/ARM64/libllamalib_android.so

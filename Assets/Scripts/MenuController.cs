@@ -11,6 +11,7 @@ public class MenuController : MonoBehaviour
     public FrisbeeController frisbeeController;
     public SimpleToggle CustomisationWindowToggle;
     public FeatureSignController signController;
+    public HatManager CustomisationManager;
     [Header("Feature Colors")]
     public Color trainColor = Color.white;
     public Color emotionColor = Color.white;
@@ -89,7 +90,8 @@ public class MenuController : MonoBehaviour
         nextAllowedClickTime = Time.time + globalCooldown;
         TurnOffAllFeatures();
 
-        CustomisationWindowToggle.ActivateCusomistionWindow();
+        // CustomisationWindowToggle.ActivateCusomistionWindow();
+        CustomisationManager.ActivateHats();
         currentFeature="customisation";
         signController.ShowExplaination("Customise Qoobo's Head wear",
                         "Customise Qoobo’s head wear until you and Qoobo have come to a decision you can both agree on.",
@@ -105,7 +107,8 @@ public class MenuController : MonoBehaviour
         if (emotionShowController != null) emotionShowController.Deactivate();
         if (TVcontroller != null) TVcontroller.Deactivate();
         if (frisbeeController != null) frisbeeController.Deactivate();
-        if (CustomisationWindowToggle !=null) CustomisationWindowToggle.Deactivate();
+        //if (CustomisationWindowToggle !=null) CustomisationWindowToggle.Deactivate();
+        if(CustomisationManager!=null)CustomisationManager.Deactivate();
         
         // Add other controllers here as you build them
     }
