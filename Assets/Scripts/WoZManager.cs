@@ -17,6 +17,8 @@ public class WoZManager : MonoBehaviour
         FrisbeeRemoteController();
         TVRemoteController();
         CustomisationRemoteController();
+        ManualReactionController();
+
     }
     
     private void TrainingRemoteInput()
@@ -107,4 +109,26 @@ public class WoZManager : MonoBehaviour
             endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
         }
     }
+    private void ManualReactionController()
+    {
+        // We only want these active during the emotion show
+        string currentFeature = menuController.GetCurrentFeature();
+        if (currentFeature != "emotion show" && currentFeature != "train") { return; }
+
+        // Right Grip Trigger: Small Positive Reaction
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch))
+        {
+            emotionController.TryDisplayEmotion("Happy", "WoZ_Small_Positive", true);
+            Debug.Log("WoZ: Triggered Small Positive Reaction (Right Grip)");
+        }
+
+        // Left Grip Trigger: Small Negative Reaction
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch))
+        {
+            emotionController.TryDisplayEmotion("Sad", "WoZ_Small_Negative", true);
+            Debug.Log("WoZ: Triggered Small Negative Reaction (Left Grip)");
+        }
+    }
+
+
 }

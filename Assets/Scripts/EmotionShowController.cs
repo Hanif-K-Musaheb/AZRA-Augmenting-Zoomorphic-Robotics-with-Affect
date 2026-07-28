@@ -83,12 +83,13 @@ public class EmotionShowController : MonoBehaviour
         switch (currentLadderLevel)
         {
             case 1:
-                targetEmotion = "Sad";
-                emotionModel.SetSadState(); 
+            targetEmotion = "Gloomy";
+                emotionModel.SetEmotionalState(-8f, -8f);
+                 
                 break;
             case 2:
-                targetEmotion = "Gloomy";
-                emotionModel.SetEmotionalState(-8f, -8f);
+                targetEmotion = "Sad";
+                emotionModel.SetSadState();
                 break;
             case 3:
                 targetEmotion = "Neutral";
