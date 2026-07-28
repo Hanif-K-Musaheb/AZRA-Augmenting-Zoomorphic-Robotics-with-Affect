@@ -51,10 +51,10 @@
 - **modified WoZManager** so that I can just click the joy stick down and the questionaire will appear.
 
 ### v1.5.3
--**added FeatureSignController** adds a sign to all the new feature explaining what they are and how to use them
+- **added FeatureSignController** adds a sign to all the new feature explaining what they are and how to use them
 ### v1.5.4
--**added hatInteractive** which allows you to pick up the hats and place them on Qoobo's head
--**added hatManager** essentially just spawns the hats in and manages which hat is on qoobos head and then parents that hat to them when they go to another feature.
+- **added hatInteractive** which allows you to pick up the hats and place them on Qoobo's head
+- **added hatManager** essentially just spawns the hats in and manages which hat is on qoobos head and then parents that hat to them when they go to another feature.
 - _completly working and found no bugs during pilot test no polishing needed_
 
 
