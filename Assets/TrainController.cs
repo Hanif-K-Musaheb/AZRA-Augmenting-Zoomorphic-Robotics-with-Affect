@@ -9,22 +9,15 @@ public class TrainController : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private Transform qooboTransform;
     [SerializeField] private GameObject DonutBoxPrefab;
-    public float cooldownTime = 2.0f;
     private GameObject currentSpawnedDonutBox;
-    private float nextAllowedClickTime = 0f;
+
 
     private bool is_Training = false;
 
     public void StartTraining()
     {
-        // if (Time.time < nextAllowedClickTime)//stops issue with AR double click
-        // {
-        //     Debug.Log("Button is on cooldown, Ignoring click.");
-        //     return; 
-        // }
-        // nextAllowedClickTime = Time.time + cooldownTime;
-
         if (is_Training)
         {
             Deactivate();
@@ -40,25 +33,38 @@ public class TrainController : MonoBehaviour
             Debug.Log("Training started");
         }
 
+        InstantiateDonutBox();
+       
+    }
+
+    private void InstantiateDonutBox()
+    {
         if (currentSpawnedDonutBox != null)
         {
             Destroy(currentSpawnedDonutBox);
         }
 
-        if (spawnPoint != null)
-        {
-            currentSpawnedDonutBox = Instantiate(DonutBoxPrefab, spawnPoint.position, spawnPoint.rotation);
-        }
-        else
-        {
-            currentSpawnedDonutBox = Instantiate(DonutBoxPrefab);
-        }
+        if (qooboTransform == null)return;
         
-        if (showDebugLogs)
+        float rightOffset = -0.6f;   
+        float forwardOffset = 0.1f; 
+
+        //calculate the position of the donut box
+        Vector3 calculatedSpawnPosition = qooboTransform.position 
+                                        + (qooboTransform.forward * forwardOffset)
+                                        + (qooboTransform.right * rightOffset);
+
+        calculatedSpawnPosition.y = qooboTransform.position.y;//force it to be on the table with Qoobo          
+        Quaternion rotationOffset = Quaternion.Euler(0, -135f, 0); 
+        Quaternion finalRotation = qooboTransform.rotation * rotationOffset; 
+
+        currentSpawnedDonutBox = Instantiate(DonutBoxPrefab, calculatedSpawnPosition, finalRotation);
+
+         if (showDebugLogs)
         {
             Debug.Log("Prefab spawned!");
         }
-
+        
     }
 
     public void Deactivate()

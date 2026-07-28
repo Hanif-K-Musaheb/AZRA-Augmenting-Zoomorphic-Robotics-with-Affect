@@ -11436,6 +11436,10 @@ MonoBehaviour:
   SombreroHat: {fileID: 1174791154}
   emotionModel: {fileID: 799751474}
   emotionController: {fileID: 799751471}
+  emotionDisplayCooldown: 0
+  timeSinceLastClick: 0
+  HatSelections: 0
+  allHatButtons: []
 --- !u!1 &498176962
 GameObject:
   m_ObjectHideFlags: 0
@@ -16191,7 +16195,7 @@ Transform:
   m_GameObject: {fileID: 681105465}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.14318079, z: -0, w: 0.98969656}
-  m_LocalPosition: {x: 0.351, y: -1.695, z: -1.28}
+  m_LocalPosition: {x: 0.438, y: -1.695, z: -1.306}
   m_LocalScale: {x: 0.049999997, y: 0.049999997, z: 0.049999997}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -17856,7 +17860,7 @@ Transform:
   m_GameObject: {fileID: 760022072}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.14318079, z: -0, w: 0.98969656}
-  m_LocalPosition: {x: 0.54, y: -1.695, z: -1.344}
+  m_LocalPosition: {x: 0.627, y: -1.695, z: -1.37}
   m_LocalScale: {x: 0.049999997, y: 0.049999997, z: 0.049999997}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -18938,8 +18942,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebugLogs: 0
   spawnPoint: {fileID: 795097606}
+  qooboTransform: {fileID: 963561175}
   DonutBoxPrefab: {fileID: 8486435439581835541, guid: f06ceb8d293fc804082a092a3a4960a4, type: 3}
-  cooldownTime: 2
 --- !u!114 &799751486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18988,8 +18992,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emotionModel: {fileID: 799751474}
   emotionController: {fileID: 799751471}
+  metricsMenuController: {fileID: 1943569792}
+  qooboTransform: {fileID: 963561175}
+  DonutBoxPrefab: {fileID: 8486435439581835541, guid: f06ceb8d293fc804082a092a3a4960a4, type: 3}
   showDebugLogs: 1
-  cooldownTime: 2
 --- !u!114 &799751489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19006,7 +19012,6 @@ MonoBehaviour:
   emotionShowController: {fileID: 799751488}
   TVcontroller: {fileID: 799751484}
   frisbeeController: {fileID: 799751481}
-  CustomisationWindowToggle: {fileID: 496290921}
   signController: {fileID: 8561664}
   CustomisationManager: {fileID: 857954978}
   trainColor: {r: 0.5294118, g: 0.81568635, b: 0.9607844, a: 1}
@@ -24185,6 +24190,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c3b76e29563f347a22c879985d2323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &963561175 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8620355210458400226, guid: 2297f865da1722043b726ec74af77b13, type: 3}
+  m_PrefabInstance: {fileID: 1707299874730129972}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &964356600
 GameObject:
   m_ObjectHideFlags: 0
@@ -42259,7 +42269,7 @@ Transform:
   m_GameObject: {fileID: 1670521825}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.14318079, z: -0, w: 0.98969656}
-  m_LocalPosition: {x: 0.18187433, y: -1.695, z: -1.2300093}
+  m_LocalPosition: {x: 0.26887432, y: -1.695, z: -1.2560093}
   m_LocalScale: {x: 0.049999997, y: 0.049999997, z: 0.049999997}
   m_ConstrainProportionsScale: 1
   m_Children:

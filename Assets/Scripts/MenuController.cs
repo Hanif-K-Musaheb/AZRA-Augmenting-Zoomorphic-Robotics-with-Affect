@@ -9,7 +9,6 @@ public class MenuController : MonoBehaviour
     public EmotionShowController emotionShowController;
     public ObjectToggler TVcontroller;
     public FrisbeeController frisbeeController;
-    public SimpleToggle CustomisationWindowToggle;
     public FeatureSignController signController;
     public HatManager CustomisationManager;
     [Header("Feature Colors")]

@@ -14,7 +14,7 @@ public class HatInteractive : MonoBehaviour
     [SerializeField] private Transform originalSpawnPoint;
 
     [Header("Debug")]
-    [SerializeField] private bool showDebugLogs = true;
+    [SerializeField] private bool showDebugLogs = false;
 
     private bool isEquipped = false;
 
