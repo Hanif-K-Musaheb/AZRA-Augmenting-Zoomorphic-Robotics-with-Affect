@@ -58,6 +58,9 @@
 - **added hatManager** essentially just spawns the hats in and manages which hat is on qoobos head and then parents that hat to them when they go to another feature.
   
 - _completly working and found no bugs during pilot test no polishing needed_
+### v1.5.5
+- **modified EmotionShowController** so that it isolates the emotions of qoobo to just WoZ inputs, made it so there is a neutral face emotions, made it so it actually effects the emotions not just short bursts, added a donut box to emotion show
+- **fixed bug** - fixed the donut box bug now it will spawn in relative to Qoobo not at a specific spawn point
 
 
 
