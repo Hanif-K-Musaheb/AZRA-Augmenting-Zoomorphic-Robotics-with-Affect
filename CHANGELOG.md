@@ -66,7 +66,9 @@
 - **modified emotionshow** so gloomy was the starting point instead of sad
 ### v1.5.7
 - **modified Woz manager and ghostModeController** so that now you can press the a key and it will move along the fetch sequence, could not figure out why sometimes the frisbee wont be picked up and why it keeps rotating i locked the rotation but to no avail
-- 
+### v1.5.8
+- **fixed** the tv clip scipt so it will delete the object after 5 minutes
+- **fixed** the location of the questionaire script so that it can be seen on every feature by deactivating the menu follows script
 
 
 
