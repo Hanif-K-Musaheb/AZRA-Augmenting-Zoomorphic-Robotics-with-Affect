@@ -69,13 +69,6 @@ public class FrisbeeController : MonoBehaviour
 
     public void SpawnFrisbee()
     {
-        // if (Time.time - lastSpawnTime < spawnCooldown)
-        // {
-        //     if (showDebugLogs) Debug.Log("FrisbeeController: Spawn cooldown active. Please wait before spawning another frisbee.");
-        //     return;
-        // }
-        // lastSpawnTime = Time.time;
-
         if (frisbeePrefab == null)
         {
             Debug.LogError("FrisbeeController: Frisbee prefab not assigned! Please assign it in the inspector.");

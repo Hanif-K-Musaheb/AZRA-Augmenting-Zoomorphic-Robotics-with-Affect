@@ -43,11 +43,13 @@ public class FrisbeeFlight : MonoBehaviour
     {
         // Lock rotation again so it stays horizontal in flight
         LockHorizontalRotation();
+
     }
 
     private void LockHorizontalRotation()
     {
         // Freezes X and Z rotation, leaves Y free to spin
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        //transform.eulerAngles = new Vector3(0f, transform.eulerAngles.y, 0f);
     }
 }

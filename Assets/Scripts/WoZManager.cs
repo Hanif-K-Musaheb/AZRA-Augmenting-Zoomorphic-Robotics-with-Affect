@@ -9,6 +9,9 @@ public class WoZManager : MonoBehaviour
     [SerializeField] private EmotionController emotionController;
     [SerializeField] private EndOfFeatureQuesitonaire endOfFeatureQuesitonaire;
     [SerializeField] private MenuController menuController;
+    [SerializeField] private GhostModeController ghostModeController;
+    //fetch variables
+    // public enum FetchState { Idle, ChasingFrisbee, ReturningToPlayer }
 
     void Update()
     {
@@ -80,11 +83,34 @@ public class WoZManager : MonoBehaviour
     private void FrisbeeRemoteController()
     {
         string currentFeature = menuController.GetCurrentFeature();
+        
+
         if(currentFeature != "frisbee") { return; }
 
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.RTouch))
         {
             endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
+        }
+        // A button Right (Move down the ladder, emotions get worse)
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            Debug.Log(ghostModeController.DebugStatement()); 
+            // Use GhostModeController.FetchState instead of just FetchState
+            GhostModeController.FetchState currentFetchState = ghostModeController.GetFetchState();
+
+            switch (currentFetchState) // Make sure to switch on 'currentFetchState', not 'fetchState'
+            {
+                case GhostModeController.FetchState.Idle:
+                    ghostModeController.AllowFetch();
+                    break; // Don't forget your break statements!
+
+                case GhostModeController.FetchState.ChasingFrisbee:
+                    ghostModeController.ForceRetrieve();
+                    break;
+                case GhostModeController.FetchState.ReturningToPlayer:
+                    ghostModeController.AllowDrop();
+                    break;
+            }
         }
     }
     

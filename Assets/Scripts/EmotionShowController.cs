@@ -29,7 +29,23 @@ public class EmotionShowController : MonoBehaviour
         isEmotionShowActive = true;
         currentLadderLevel = 1; // Always reset to Sad when the feature starts
 
-         if (metricsMenuController != null)
+        IsolateQooboEmotion();
+
+       
+
+        if (showDebugLogs)
+        {
+            Debug.Log("Emotion Show started - Forcing Sad state");
+        }
+
+        UpdateEmotionDisplay();
+
+        InstantiateDonutBox();
+    }
+
+    private void IsolateQooboEmotion()//stops donuts and strokes from effecting qoobo so it can all be done manually from the WoZmanager
+    {
+        if (metricsMenuController != null)
         {
             // Disable gaze, distance, and speech toggles during tour
             metricsMenuController.SetGazeToggle(false);
@@ -43,15 +59,22 @@ public class EmotionShowController : MonoBehaviour
             emotionModel.SetEventWeight(0f);
             emotionModel.SetMoodWeight(1f);
         }
-
-        if (showDebugLogs)
+        
+    }
+    private void UndoIsolateQooboEmotion()
+    {
+        if (emotionModel != null)
         {
-            Debug.Log("Emotion Show started - Forcing Sad state");
+            emotionModel.SetEventWeight(0.7f);
+            emotionModel.SetMoodWeight(0.3f);
         }
 
-        UpdateEmotionDisplay();
+        emotionController.TryDisplayEmotion("Neutral", "WoZ_Ladder_Override", true);
 
-        InstantiateDonutBox();
+        metricsMenuController.SetGazeToggle(originalGazeToggle);
+        metricsMenuController.SetDistanceToggle(originalDistanceToggle);
+        metricsMenuController.SetSpeechToggle(originalSpeechToggle);
+        
     }
 
     public bool IsEmotionShowActive()
@@ -119,24 +142,15 @@ public class EmotionShowController : MonoBehaviour
         if (!isEmotionShowActive) return;
 
         isEmotionShowActive = false;
+        UndoIsolateQooboEmotion();
 
-        // Restore normal interaction weights when you switch to a different feature
-        if (emotionModel != null)
-        {
-            emotionModel.SetEventWeight(0.7f);
-            emotionModel.SetMoodWeight(0.3f);
-        }
-
-        emotionController.TryDisplayEmotion("Neutral", "WoZ_Ladder_Override", true);
+    
 
         if (showDebugLogs)
         {
             Debug.Log("Emotion Show has stopped");
         }
 
-        metricsMenuController.SetGazeToggle(originalGazeToggle);
-        metricsMenuController.SetDistanceToggle(originalDistanceToggle);
-        metricsMenuController.SetSpeechToggle(originalSpeechToggle);
 
         if (currentSpawnedDonutBox != null)
         {

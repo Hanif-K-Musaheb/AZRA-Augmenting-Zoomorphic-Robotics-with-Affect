@@ -11,8 +11,14 @@ public class TrainController : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Transform qooboTransform;
     [SerializeField] private GameObject DonutBoxPrefab;
+    [SerializeField] private MetricsMenuController metricsMenuController;
+    [SerializeField] private EmotionModel emotionModel;
+    [SerializeField] private EmotionController emotionController;
     private GameObject currentSpawnedDonutBox;
-
+    
+    private bool originalGazeToggle = true;
+    private bool originalDistanceToggle = true;
+    private bool originalSpeechToggle = true;
 
     private bool is_Training = false;
 
@@ -33,6 +39,7 @@ public class TrainController : MonoBehaviour
             Debug.Log("Training started");
         }
 
+        IsolateQooboEmotion();
         InstantiateDonutBox();
        
     }
@@ -66,10 +73,44 @@ public class TrainController : MonoBehaviour
         }
         
     }
+    private void IsolateQooboEmotion()//stops donuts and strokes from effecting qoobo so it can all be done manually from the WoZmanager
+    {
+        if (metricsMenuController != null)
+        {
+            // Disable gaze, distance, and speech toggles during tour
+            metricsMenuController.SetGazeToggle(false);
+            metricsMenuController.SetDistanceToggle(false);
+            metricsMenuController.SetSpeechToggle(false);
+        }
+
+        // Disable standard event reactions so touch/food don't auto-change mood
+        if (emotionModel != null)
+        {
+            emotionModel.SetEventWeight(0f);
+            emotionModel.SetMoodWeight(1f);
+        }
+        
+    }
+    private void UndoIsolateQooboEmotion()
+    {
+        if (emotionModel != null)
+        {
+            emotionModel.SetEventWeight(0.7f);
+            emotionModel.SetMoodWeight(0.3f);
+        }
+
+        emotionController.TryDisplayEmotion("Neutral", "WoZ_Ladder_Override", true);
+
+        metricsMenuController.SetGazeToggle(originalGazeToggle);
+        metricsMenuController.SetDistanceToggle(originalDistanceToggle);
+        metricsMenuController.SetSpeechToggle(originalSpeechToggle);
+        
+    }
 
     public void Deactivate()
     {
         if (!is_Training) return;
+        UndoIsolateQooboEmotion();
 
         Destroy(currentSpawnedDonutBox);
         is_Training = false;

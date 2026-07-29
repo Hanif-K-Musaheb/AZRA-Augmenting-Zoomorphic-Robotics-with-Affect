@@ -4740,11 +4740,6 @@ Transform:
   - {fileID: 416241957}
   m_Father: {fileID: 494165852}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &200612851 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: a0dfaf0497ab5334a99165f16b697e6e, type: 3}
-  m_PrefabInstance: {fileID: 196820462}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &200612852 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: a0dfaf0497ab5334a99165f16b697e6e, type: 3}
@@ -5260,11 +5255,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 238002534}
   m_CullTransparentMesh: 1
---- !u!1 &238691269 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 06c4131835f65024586454416f6b1f66, type: 3}
-  m_PrefabInstance: {fileID: 374502162}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &238691270 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 06c4131835f65024586454416f6b1f66, type: 3}
@@ -11426,20 +11416,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ecc4d186d728c48bd126ccd7314d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugLogs: 1
-  CowboyHatButton: {fileID: 1769181124}
-  MagicianHatButton: {fileID: 919399310}
-  SombreroHatButton: {fileID: 818636851}
-  NoHatButton: {fileID: 1772938097}
-  CowboyHat: {fileID: 200612851}
-  MagicianHat: {fileID: 238691269}
-  SombreroHat: {fileID: 1174791154}
-  emotionModel: {fileID: 799751474}
-  emotionController: {fileID: 799751471}
-  emotionDisplayCooldown: 0
-  timeSinceLastClick: 0
-  HatSelections: 0
-  allHatButtons: []
 --- !u!1 &498176962
 GameObject:
   m_ObjectHideFlags: 0
@@ -18944,6 +18920,9 @@ MonoBehaviour:
   spawnPoint: {fileID: 795097606}
   qooboTransform: {fileID: 963561175}
   DonutBoxPrefab: {fileID: 8486435439581835541, guid: f06ceb8d293fc804082a092a3a4960a4, type: 3}
+  metricsMenuController: {fileID: 1943569792}
+  emotionModel: {fileID: 799751474}
+  emotionController: {fileID: 799751471}
 --- !u!114 &799751486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18978,6 +18957,7 @@ MonoBehaviour:
   emotionController: {fileID: 799751471}
   endOfFeatureQuesitonaire: {fileID: 1733375491}
   menuController: {fileID: 799751489}
+  ghostModeController: {fileID: 799751476}
 --- !u!114 &799751488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30559,11 +30539,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 9.313226e-10, z: 0.04286451}
     m_Extent: {x: 0.012802282, y: 0.012802282, z: 0.03283713}
   m_DirtyAABB: 0
---- !u!1 &1174791154 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 290f57b34312fbf448d3b8ca6b6bd41d, type: 3}
-  m_PrefabInstance: {fileID: 588083032}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1174791155 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 290f57b34312fbf448d3b8ca6b6bd41d, type: 3}

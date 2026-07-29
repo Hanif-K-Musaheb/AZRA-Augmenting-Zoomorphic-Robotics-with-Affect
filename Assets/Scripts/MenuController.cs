@@ -34,7 +34,7 @@ public class MenuController : MonoBehaviour
         trainController.StartTraining(); 
         currentFeature="train";
         signController.ShowExplaination("Training",
-                    "Teach Qoobo tricks by saying the command, then rewarding it with praise, a donut, or a stroke!\n\nTricks to teach:\n1. Flip\n2. Double Flip\n3. Flip + Spin\n4. Flip + Spin + Roll",
+                    "Teach Qoobo tricks by saying the command, then rewarding it with praise, a donut, or a stroke!\n\nTricks to teach:\n1. Flip\n2. Double Flip\n3. Flip + Spin\n4. Flip + Spin + Roll\nNote: Qoobo wont always be obedient",
                     trainColor);   
     }
 
@@ -79,7 +79,7 @@ public class MenuController : MonoBehaviour
         frisbeeController.OnSpawnButtonClicked();
         currentFeature="frisbee";
         signController.ShowExplaination("Catch with a Frisbee",
-                        "Throw the frisbee and say 'catch'\n When Qoobo picks up the frisbee say “retrieve”.\n When Qoobo is next to you with the frisbee say 'drop it'",
+                        "Throw the frisbee and say 'catch'\n Say “retrieve” for Qoobo to pick up the frisbee.\n When Qoobo is next to you with the frisbee say 'drop it' and firsbee will disapear\n To play again simply press the frisbee button",
                         frisbeeColor);
     }
 

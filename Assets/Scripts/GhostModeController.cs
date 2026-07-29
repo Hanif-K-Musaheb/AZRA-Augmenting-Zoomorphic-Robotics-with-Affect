@@ -21,7 +21,7 @@ public class GhostModeController : MonoBehaviour
 	[SerializeField] private float ghostScaleFactor = 0.5f; // shrink to 50%
 	[SerializeField] private float riseHeight = 0.3f; // meters upward on enter
 	[SerializeField] private float transitionDuration = 1.5f; // seconds for enter/exit
-	[SerializeField] private float thresholdForCatch = 0.5f; // meters from frisbee to consider "caught"
+	[SerializeField] private float thresholdForCatch = 1.5f; // meters from frisbee to consider "caught"
 
 	[Header("Follow Settings")] 
 	[SerializeField] private float preferredDistance = 0.5f; // meters from target
@@ -54,7 +54,7 @@ public class GhostModeController : MonoBehaviour
 
 	// Public property to check ghost state
 	public bool IsGhost => isGhost;
-	private enum FetchState { Idle, ChasingFrisbee, ReturningToPlayer }
+	public enum FetchState { Idle, ChasingFrisbee, ReturningToPlayer }
 	private FetchState fetchState = FetchState.Idle;
 	private Transform carriedFrisbee = null;
 	private bool fetchAllowed = false;
@@ -62,6 +62,7 @@ public class GhostModeController : MonoBehaviour
 	private bool dropAllowed = false;
 	private float TimeSinceLastCommandInSequence = 0f;
 	private float RandomiseTimeRange; //used so that the retrieve command is not always exactly 3 seconds after the fetch command, but can be between 3 and 7 seconds
+	private bool MoveOnManualOverride;
 
 
 	void Awake()
@@ -86,7 +87,38 @@ public class GhostModeController : MonoBehaviour
 
 		HandleFetchSequence();//handles the AR fetch sequence
 	}
+
+	public string DebugStatement()
+	{
+		// Safely check distance without throwing null errors if the frisbee is missing
+		bool isNear = false;
+		if (frisbeeMarker.Current != null)
+		{
+			isNear = IsNearFrisbee(arQooboRoot.position, frisbeeMarker.Current.position, thresholdForCatch);
+		}
+
+		// Return the actual boolean value of each condition
+		return $"--- Retrieve Condition Breakdown ---\n" +
+			$"isGhost: {isGhost}\n" +
+			$"!isTransitioning: {!isTransitioning}\n" +
+			$"!isDoingTrick: {!isDoingTrick}\n" +
+			$"!isJumping: {!isJumping}\n" +
+			$"IsNearFrisbee: {isNear}\n" +
+			$"retrieveAllowed: {retrieveAllowed}\n" +
+			$"MoveOnManualOverride: {MoveOnManualOverride}";
+	}
 	//Update methods
+
+	public void ForceRetrieve()
+	{
+		if (fetchState == FetchState.ChasingFrisbee && frisbeeMarker.Current != null)
+		{
+			PickUpFrisbee(frisbeeMarker.Current);
+			fetchState = FetchState.ReturningToPlayer;
+			retrieveAllowed = false;
+			TimeSinceLastCommandInSequence = 0f;
+		}
+	}
 
 	private void HandleFetchSequence()
 	{
@@ -119,7 +151,7 @@ public class GhostModeController : MonoBehaviour
 					{
 						followTarget = frisbeeMarker.Current;
 						if (IsNearFrisbee(arQooboRoot.position, frisbeeMarker.Current.position, thresholdForCatch)&&
-						(retrieveAllowed||TimeSinceLastCommandInSequence>(MoveOnTimeThreshold+RandomiseTimeRange)))
+						(retrieveAllowed || MoveOnManualOverride))
 						//if retrieveAllowed is false, then we can pick up the frisbee after 3 seconds of chasing it
 						{
 							PickUpFrisbee(frisbeeMarker.Current);
@@ -133,10 +165,11 @@ public class GhostModeController : MonoBehaviour
 				case FetchState.ReturningToPlayer:
 					followTarget = playerTransform;
 					if (IsNearFrisbee(arQooboRoot.position, playerTransform.position, thresholdForCatch)&&
-					(dropAllowed||TimeSinceLastCommandInSequence>(MoveOnTimeThreshold+RandomiseTimeRange)))//reusing the IsNearFrisbee function to check if we are close enough to the player to drop the frisbee :/
+					(dropAllowed||MoveOnManualOverride))//reusing the IsNearFrisbee function to check if we are close enough to the player to drop the frisbee :/
 					{
 						DropFrisbeeAndReturnToNormal();
 						dropAllowed = false;//<--possible error here, requires drop command every time
+						MoveOnManualOverride=false;
 					}
 					break;
 
@@ -148,6 +181,16 @@ public class GhostModeController : MonoBehaviour
 
 			FollowTargetUpdate();
 		}
+	}
+
+	public FetchState GetFetchState()
+	{
+		return fetchState;
+	}
+
+	public void FetchSequenceManualOverride()
+	{
+		MoveOnManualOverride = true;
 	}
 
 	private void HandleGhostModeToggleInput()

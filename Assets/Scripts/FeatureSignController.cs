@@ -13,14 +13,9 @@ public class FeatureSignController : MonoBehaviour
 
     void Start()
     {
-        // Ensure the sign is hidden when the app first boots up
         HideSign();
     }
 
-    /// <summary>
-    /// Displays the sign with custom text. 
-    /// Note: Spelled exactly to match the call in your MenuController script.
-    /// </summary>
     public void ShowExplaination(string featureTitle, string featureDescription, Color newColor)
     {
         // 1. Safely update the text if the references exist
@@ -32,9 +27,7 @@ public class FeatureSignController : MonoBehaviour
         if (tourPanel != null) tourPanel.SetActive(true);
     }
 
-    /// <summary>
-    /// Hides the sign when a feature is turned off.
-    /// </summary>
+
     public void HideSign()
     {
         if (tourPanel != null) tourPanel.SetActive(false);
