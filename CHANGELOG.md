@@ -64,6 +64,9 @@
 ### v1.5.6
 - **modified WoZ manager** so that you can press the hand grip triggers to make Qoobo show small positive or negative emotions used for training and emotion show
 - **modified emotionshow** so gloomy was the starting point instead of sad
+### v1.5.7
+- **modified Woz manager and ghostModeController** so that now you can press the a key and it will move along the fetch sequence, could not figure out why sometimes the frisbee wont be picked up and why it keeps rotating i locked the rotation but to no avail
+- 
 
 
 
