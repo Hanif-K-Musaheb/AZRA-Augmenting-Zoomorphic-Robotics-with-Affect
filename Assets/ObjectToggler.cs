@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class ObjectToggler : MonoBehaviour
 {
@@ -7,45 +8,47 @@ public class ObjectToggler : MonoBehaviour
     public Transform spawnPoint;           
     
     [Header("Cooldown Settings")]
-    public float cooldownTime = 2.0f; 
-    // Tracks the specific object we spawned
-    private GameObject currentSpawnedObject;
-    
-    // Tracks the exact moment the button was last clicked successfully
-    private float nextAllowedClickTime = 0f;
+    private GameObject currentTV;
+    public float timeToWait = 300f; // 5 minutes, the amount of the video wanted in the study
+
+
 
     public void ToggleObject()
     {
      
-        if (currentSpawnedObject == null)
+        if (currentTV == null)
         {
             // Spawn it
             if (spawnPoint != null)
             {
-                currentSpawnedObject = Instantiate(prefabToInstantiate, spawnPoint.position, spawnPoint.rotation);
+                currentTV = Instantiate(prefabToInstantiate, spawnPoint.position, spawnPoint.rotation);
             }
             else
             {
-                currentSpawnedObject = Instantiate(prefabToInstantiate);
+                currentTV = Instantiate(prefabToInstantiate);
             }
+            StartCoroutine(DeactivateTimer());
             
-            Debug.Log("Prefab spawned!");
         }
         else
         {
             // Destroy it
-            Destroy(currentSpawnedObject);
-            currentSpawnedObject = null; 
-            Debug.Log("Prefab destroyed!");
+            Destroy(currentTV);
+            currentTV = null; 
         }
+    }
+    IEnumerator DeactivateTimer()//stops the TV after 5min
+    {
+        yield return new WaitForSeconds(timeToWait);
+        Deactivate();
     }
 
     public void Deactivate()
     {
-        if(currentSpawnedObject != null)
+        if(currentTV != null)
         {
-            Destroy(currentSpawnedObject);
-            currentSpawnedObject = null; 
+            Destroy(currentTV);
+            currentTV = null; 
         }
     }
 }
