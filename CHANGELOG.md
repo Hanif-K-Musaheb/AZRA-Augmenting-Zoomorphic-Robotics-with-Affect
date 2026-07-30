@@ -69,6 +69,8 @@
 ### v1.5.8
 - **fixed** the tv clip scipt so it will delete the object after 5 minutes
 - **fixed** the location of the questionaire script so that it can be seen on every feature by deactivating the menu follows script
+### v1.5.9
+- **fixed** shrinking hats, backward hats, tv toggle button 
 
 
 
