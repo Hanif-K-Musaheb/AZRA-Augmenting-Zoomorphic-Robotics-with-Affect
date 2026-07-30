@@ -97,6 +97,11 @@ public class HatManager : MonoBehaviour
         // 1. UN-PARENT the equipped hat so the user can easily grab it again!
         if (currentlyEquippedHat != null)
         {
+            Collider[] colliders = currentlyEquippedHat.GetComponentsInChildren<Collider>();
+            foreach(Collider col in colliders)
+            {
+                col.enabled = true;
+            }
             currentlyEquippedHat.RemoveParenting();
         }
 
@@ -124,7 +129,13 @@ public class HatManager : MonoBehaviour
 
         if (currentlyEquippedHat != null)
         {
+            Collider[] colliders = currentlyEquippedHat.GetComponentsInChildren<Collider>();
+            foreach(Collider col in colliders)
+            {
+                col.enabled = false;
+            }
             currentlyEquippedHat.ApplyParenting();
+
         }
 
         foreach (GameObject hatObj in allHats)

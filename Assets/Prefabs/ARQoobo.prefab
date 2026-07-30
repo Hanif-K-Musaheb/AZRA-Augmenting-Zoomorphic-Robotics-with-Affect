@@ -404,13 +404,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cdcf19ba9d0703448a5824fcb1e4fcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faceStyleManager: {fileID: 0}
   neutralLoopPath: NeutralLoop
   happyLoopPath: HappyLoop
   angryLoopPath: AngryLoop
+  sadLoopPath: AbstractFaces/SadLoop
+  scaredLoopPath: AbstractFaces/ScaredLoop
+  surprisedLoopPath: AbstractFaces/SurprisedLoop
   frameRate: 24
+  useOptimizedFrames: 1
+  optimizedFrameCount: 100
+  frameDurationMultiplier: 2
   loopNeutralAnimation: 1
   loopHappyAnimation: 1
   loopAngryAnimation: 1
+  loopSadAnimation: 1
+  loopScaredAnimation: 1
+  loopSurprisedAnimation: 1
 --- !u!1 &2582165827689460544
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,10 +778,14 @@ MonoBehaviour:
   emotionController: {fileID: 0}
   emotionModel: {fileID: 0}
   sceneController: {fileID: 0}
+  ghostModeController: {fileID: 0}
+  trainController: {fileID: 0}
+  trickLearner: {fileID: 0}
   useDefaultMicrophone: 0
   monitorAudio: 0
   monitorVolume: 1
   showDebugLogs: 1
+  showSpeechProcessing: 0
   wordGroups:
   - groupName: Name
     variations:
@@ -969,9 +983,13 @@ MonoBehaviour:
   frontTrigger: {fileID: 3040733164489765944}
   backTrigger: {fileID: 1538105242042053043}
   topTrigger: {fileID: 0}
+  leftTrigger: {fileID: 0}
+  rightTrigger: {fileID: 0}
   strokeCooldownTime: 2
   maxTimeBetweenTriggers: 2
   maxSequenceLength: 5
+  requiredHoldTime: 5
+  holdEventCooldown: 10
   showDebugLogs: 1
 --- !u!1 &5634899973659889938
 GameObject:
@@ -1163,6 +1181,10 @@ MonoBehaviour:
   defaultFaceMaterial: {fileID: 2100000, guid: a2e8e5009c1821b4aad6e07ff3b3b7ce, type: 2}
   sceneController: {fileID: 0}
   faceAnimationController: {fileID: 1823133348085653002}
+  enableCameraFollow: 0
+  maxYawOffsetDegrees: 10
+  followSmoothingSeconds: 2
+  bodyRoot: {fileID: 0}
   happyFaceMaterial: {fileID: 2100000, guid: 795ca06bdb7fd4b478831b672dc178f1, type: 2}
   sadFaceMaterial: {fileID: 2100000, guid: cd6135aa11350624a8f92a5a3919f81d, type: 2}
   angryFaceMaterial: {fileID: 2100000, guid: d515595deeb608f429b40ae082c31659, type: 2}
@@ -1170,6 +1192,7 @@ MonoBehaviour:
   surprisedFaceMaterial: {fileID: 2100000, guid: c5e5fb31f82fba342ab79a2b45a8769d, type: 2}
   neutralFaceMaterial: {fileID: 2100000, guid: a2e8e5009c1821b4aad6e07ff3b3b7ce, type: 2}
   sleepyFaceMaterial: {fileID: 2100000, guid: b8042f2ef334103428848ef32d9bb9aa, type: 2}
+  eatingFaceMaterial: {fileID: 0}
   faceOffset: 0.97
   faceDiameter: 0.21
   faceHeight: 0.17

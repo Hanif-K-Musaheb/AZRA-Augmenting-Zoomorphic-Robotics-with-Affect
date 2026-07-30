@@ -10,8 +10,6 @@ public class WoZManager : MonoBehaviour
     [SerializeField] private EndOfFeatureQuesitonaire endOfFeatureQuesitonaire;
     [SerializeField] private MenuController menuController;
     [SerializeField] private GhostModeController ghostModeController;
-    //fetch variables
-    // public enum FetchState { Idle, ChasingFrisbee, ReturningToPlayer }
 
     void Update()
     {
@@ -59,16 +57,15 @@ public class WoZManager : MonoBehaviour
     {
         string currentFeature = menuController.GetCurrentFeature();
         
-        // This directly matches how your MenuController sets the string
         if(currentFeature != "emotion show") { return; }
     
-        // B button Right (Move up the ladder, emotions get better)
+        // B button (left) moves up the ladder of emotion 
         if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
         {
             emotionShowController.StepUp();
         }
         
-        // A button Right (Move down the ladder, emotions get worse)
+        // A Button (right) moves down the ladder of emotion
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
             emotionShowController.StepDown();
@@ -91,14 +88,14 @@ public class WoZManager : MonoBehaviour
         {
             endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
         }
-        // A button Right (Move down the ladder, emotions get worse)
+
+       // A button forces the fetch sequence to move incase it gets stuck in the study
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
             Debug.Log(ghostModeController.DebugStatement()); 
-            // Use GhostModeController.FetchState instead of just FetchState
             GhostModeController.FetchState currentFetchState = ghostModeController.GetFetchState();
 
-            switch (currentFetchState) // Make sure to switch on 'currentFetchState', not 'fetchState'
+            switch (currentFetchState) 
             {
                 case GhostModeController.FetchState.Idle:
                     ghostModeController.AllowFetch();
@@ -135,20 +132,22 @@ public class WoZManager : MonoBehaviour
             endOfFeatureQuesitonaire.StartQuestionnaire(currentFeature);
         }
     }
+
+    //Small reactions used so that the study doesn't have to rely on unreliable vosk translation
     private void ManualReactionController()
     {
-        // We only want these active during the emotion show
+        
         string currentFeature = menuController.GetCurrentFeature();
-        if (currentFeature != "emotion show" && currentFeature != "train") { return; }
+        if (currentFeature != "emotion show" && currentFeature != "train") { return; }//only active during emotion show and training
 
-        // Right Grip Trigger: Small Positive Reaction
+        // right grip trigger -> small positive reaction
         if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch))
         {
             emotionController.TryDisplayEmotion("Happy", "WoZ_Small_Positive", true);
             Debug.Log("WoZ: Triggered Small Positive Reaction (Right Grip)");
         }
 
-        // Left Grip Trigger: Small Negative Reaction
+        // right grip trigger -> small negative reaction
         if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch))
         {
             emotionController.TryDisplayEmotion("Sad", "WoZ_Small_Negative", true);

@@ -21,8 +21,9 @@ public class MenuController : MonoBehaviour
 
 
     private float nextAllowedClickTime=0;
-    private float globalCooldown = 0;
+    private float globalCooldown = 1;
     private string currentFeature;
+    private bool TVon = false;
 
     public void OnSelectTrainingFeature()
     {
@@ -55,19 +56,32 @@ public class MenuController : MonoBehaviour
 
     public void OnSelectTVFeature()
     {
-
-        if (Time.time < nextAllowedClickTime) return; 
+        //More complicated here because the TV button needed to be able to deactivate when moving to another feature and when pressing the TV button again
+        if (Time.time < nextAllowedClickTime) 
+        {
+            return; 
+        }
         nextAllowedClickTime = Time.time + globalCooldown;
 
+        if (currentFeature == "TV")
+        {
+            TurnOffAllFeatures();
+            return; 
+        }
         TurnOffAllFeatures();
 
-        TVcontroller.ToggleObject();
-        currentFeature="TV";
-        signController.ShowExplaination("TV",
-                    "In this just sit back and relax with Qoobo however you may like",
-                    tvColor);  
-
-      
+        TVcontroller.ToggleObject(); 
+        currentFeature = "TV";
+        
+        if (signController != null)
+        {
+            signController.ShowExplaination("TV", "In this just sit back and relax with Qoobo however you may like", tvColor);  
+        }
+        else
+        {
+            Debug.LogWarning("SignController is missing in the Inspector! Skipping sign.");
+        }
+        
     }
 
     public void OnSelectFrisbeeFeature()
@@ -106,10 +120,9 @@ public class MenuController : MonoBehaviour
         if (emotionShowController != null) emotionShowController.Deactivate();
         if (TVcontroller != null) TVcontroller.Deactivate();
         if (frisbeeController != null) frisbeeController.Deactivate();
-        //if (CustomisationWindowToggle !=null) CustomisationWindowToggle.Deactivate();
         if(CustomisationManager!=null)CustomisationManager.Deactivate();
         
-        // Add other controllers here as you build them
+        //when adding features to the menu controller add there deactivation here
     }
 
     public string GetCurrentFeature()
