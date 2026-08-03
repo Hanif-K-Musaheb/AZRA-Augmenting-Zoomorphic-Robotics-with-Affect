@@ -65,13 +65,18 @@
 - **modified WoZ manager** so that you can press the hand grip triggers to make Qoobo show small positive or negative emotions used for training and emotion show
 - **modified emotionshow** so gloomy was the starting point instead of sad
 ### v1.5.7
-- **modified Woz manager and ghostModeController** so that now you can press the a key and it will move along the fetch sequence, could not figure out why sometimes the frisbee wont be picked up and why it keeps rotating i locked the rotation but to no avail
+- **modified Woz manager and ghostModeController** so that now you can press the a key and it will move along the fetch sequence, could not figure out why sometimes the frisbee wont be picked up and why it keeps rotating I locked the rotation but to no avail
 ### v1.5.8
 - **fixed** the tv clip scipt so it will delete the object after 5 minutes
 - **fixed** the location of the questionaire script so that it can be seen on every feature by deactivating the menu follows script
 ### v1.5.9
-- **fixed** shrinking hats, backward hats, tv toggle button 
-
+- **fixed** shrinking hats, backward hats, tv toggle button
+### v1.5.10
+- **Fixed** menu option so you select menu buttons to turn a feature off instead of switching between features
+- **Changed** the emotion show so that when you switch to another feature the emotion of the robot is then neutralised
+- **Added** a neutral mode where there is no feature running
+- made it so that Qoobo can only hear in the features it needs to
+- Some other small bug fixes as well as grammar fixes in the questions
 
 
 
