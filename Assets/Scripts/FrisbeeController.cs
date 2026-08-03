@@ -1,29 +1,25 @@
 using UnityEngine;
-using UnityEngine.XR.Hands;
 using System.Collections.Generic;
-using UnityEngine.XR;
 using UnityEngine.InputSystem;
 
 public class FrisbeeController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] [Tooltip("Drag your saved Frisbee prefab here")] 
+    [SerializeField] [Tooltip("Drag the Frisbee prefab here")]
     private GameObject frisbeePrefab;
     
+    [SerializeField] [Tooltip("Drag the GameObject where you want the frisbee to spawn here")]
+    private Transform spawnPoint; // <-- NEW: Dedicated spawn point
+
     [SerializeField] [Tooltip("Drag the Main Camera here")] 
     private Transform playerCamera;
 
     [Header("Spawning Settings")]
-    [SerializeField] [Tooltip("How many meters in front of the camera it should spawn as a fallback")] 
-    private float spawnDistance = 0.5f; 
-    
-    [SerializeField] [Tooltip("How high above the palm to spawn when using hand tracking")] 
-    private float handHeightOffset = 0.1f; 
+    private float spawnDistance = 2.0f; 
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
 
-    private XRHandSubsystem handSubsystem;
     private float lastSpawnTime = 0f;
     [SerializeField] private float spawnCooldown = 0.5f;
 
@@ -37,20 +33,12 @@ public class FrisbeeController : MonoBehaviour
 
     void Start()
     {
-        // Get hand tracking subsystem to find hand positions
-        var handSubsystems = new List<XRHandSubsystem>();
-        SubsystemManager.GetSubsystems(handSubsystems);
-        if (handSubsystems.Count > 0)
+        if (spawnPoint == null && showDebugLogs)
         {
-            handSubsystem = handSubsystems[0];
-            if (showDebugLogs) Debug.Log("FrisbeeController: Hand tracking subsystem initialized successfully.");
-        }
-        else
-        {
-            if (showDebugLogs) Debug.LogWarning("FrisbeeController: No hand tracking subsystem found. Will use camera fallback.");
+            Debug.LogWarning("FrisbeeController: Spawn Point not assigned! Will rely on camera fallback.");
         }
 
-        // Failsafe: automatically find the main camera if you forget to drag it into the inspector (could delete)
+        // Failsafe: automatically find the main camera if you forget to drag it into the inspector
         if (playerCamera == null && Camera.main != null)
         {
             playerCamera = Camera.main.transform;
@@ -78,16 +66,12 @@ public class FrisbeeController : MonoBehaviour
         Vector3 spawnPosition = Vector3.zero;
         bool positionFound = false;
 
-        // Try Method A: Spawn near right hand
-        if (handSubsystem != null && handSubsystem.rightHand.isTracked)
+        // Try Method A: Spawn at the dedicated spawn point
+        if (spawnPoint != null)
         {
-            XRHandJoint rightPalm = handSubsystem.rightHand.GetJoint(XRHandJointID.Palm);
-            if (rightPalm.TryGetPose(out Pose palmPose))
-            {
-                spawnPosition = palmPose.position + (Vector3.up * handHeightOffset);
-                positionFound = true;
-                if (showDebugLogs) Debug.Log($"FrisbeeController: Using right hand position: {spawnPosition}");
-            }
+            spawnPosition = spawnPoint.position;
+            positionFound = true;
+            if (showDebugLogs) Debug.Log($"FrisbeeController: Using spawn point position: {spawnPosition}");
         }
 
         // Try Method B: Fallback to camera center view
@@ -98,12 +82,13 @@ public class FrisbeeController : MonoBehaviour
             if (showDebugLogs) Debug.Log($"FrisbeeController: Using camera fallback position: {spawnPosition}");
         }
         
-        // Safety check if absolutely nothing is tracked
+        // Safety check if absolutely nothing is tracked/assigned
         if (!positionFound)
         {
-            Debug.LogWarning("FrisbeeController: No camera or hand tracked. Cannot determine spawn position.");
+            Debug.LogWarning("FrisbeeController: No spawn point or camera assigned. Cannot determine spawn position.");
             return;
         }
+        
         // Get rid of the current frisbee so Qoobo only tracks 1
         if (currentFrisbee != null)
         {
@@ -113,12 +98,10 @@ public class FrisbeeController : MonoBehaviour
         // Spawn the frisbee at the calculated position
         currentFrisbee = Instantiate(frisbeePrefab, spawnPosition, Quaternion.identity);
         OnFrisbeeSpawned?.Invoke(currentFrisbee.transform);
-
         
         if (showDebugLogs) Debug.Log("FrisbeeController: Frisbee spawned successfully!");
     }
 
-  
     public void OnSpawnButtonClicked()
     {
         if (showDebugLogs) Debug.Log("FrisbeeController: Spawn UI button clicked");
@@ -138,5 +121,4 @@ public class FrisbeeController : MonoBehaviour
             Debug.Log("FrisbeeController: frisbee destroyed");
         }
     }
-
 }

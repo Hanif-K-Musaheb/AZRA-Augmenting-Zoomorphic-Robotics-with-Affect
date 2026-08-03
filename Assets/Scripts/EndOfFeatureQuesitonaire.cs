@@ -26,9 +26,9 @@ public class EndOfFeatureQuesitonaire : MonoBehaviour
     [Header("Questions")]
     [Tooltip("Add your 3 questions here in the inspector.")]
     public List<string> questions = new List<string> {
-        "Did Quoobo’s behavior seem logical to you based on your own interaction with it?",
-        "Was the perceived personality of the Quoobo what you would prefer?",
-        "Did Quoobo present high signs of emotional intelligence?"
+        "Qoobo’s behavior seem logical to you based on your own interaction with it?",
+        "The perceived personality of the Qoobo was what you would prefer?",
+        "Qoobo presented high signs of emotional intelligence?"
     };
 
     private float clickCooldown = 1.5f;

@@ -140,6 +140,7 @@ public class EmotionShowController : MonoBehaviour
     public void Deactivate()
     {
         if (!isEmotionShowActive) return;
+        emotionModel.SetNeutralState();
 
         isEmotionShowActive = false;
         UndoIsolateQooboEmotion();

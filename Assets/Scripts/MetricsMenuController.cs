@@ -765,11 +765,18 @@ public class MetricsMenuController : MonoBehaviour
         }
     }
     
-    public void SetSpeechToggle(bool enabled)////use this to change if speech is automatically toggled
+    // public void SetSpeechToggle(bool enabled)////use this to change if speech is automatically toggled
+    // {
+    //     if (speechToggle != null)
+    //     {
+    //         speechToggle.SetIsOnWithoutNotify(enabled);
+    //     }
+    // }
+    public void SetSpeechToggle(bool enabled)
     {
         if (speechToggle != null)
         {
-            speechToggle.SetIsOnWithoutNotify(enabled);
+            speechToggle.isOn = enabled; 
         }
     }
     

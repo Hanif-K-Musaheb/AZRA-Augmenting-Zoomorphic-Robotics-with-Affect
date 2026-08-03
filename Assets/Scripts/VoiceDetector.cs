@@ -307,19 +307,21 @@ private void AddGroupIfMissing(string groupName, params string[] variations)
                         // 4. Ensure the spoken text isn't empty
                         if (!string.IsNullOrEmpty(finalSpokenText))
                         {
-                            // Safely check the train controller
-                            if (trainController != null && trainController.IsTraining())
-                            {
-                                Debug.Log($"VOSK speech being sent to Qoobo brain: {finalSpokenText.ToLower()}");
+                            
+                            ProcessRecognizedSpeech(finalSpokenText.ToLower());
+                            // // Safely check the train controller
+                            // if (trainController != null && trainController.IsTraining())
+                            // {
+                            //     Debug.Log($"VOSK speech being sent to Qoobo brain: {finalSpokenText.ToLower()}");
                                 
-                                if (trickLearner != null) 
-                                    trickLearner.ParseVoskSpeech(finalSpokenText.ToLower());
-                            }
-                            else
-                            {
-                                // FIXED: Send finalSpokenText here, NOT result!
-                                ProcessRecognizedSpeech(finalSpokenText.ToLower());
-                            }
+                            //     if (trickLearner != null) 
+                            //         trickLearner.ParseVoskSpeech(finalSpokenText.ToLower());
+                            // }
+                            // else
+                            // {
+                            //     // FIXED: Send finalSpokenText here, NOT result!
+                            //     ProcessRecognizedSpeech(finalSpokenText.ToLower());
+                            // }
                         }
                     }
                 }
@@ -330,30 +332,18 @@ private void AddGroupIfMissing(string groupName, params string[] variations)
             }
         }
 
-            // string result = vosk.ProcessAudio(newData);
-
-            // VoskTranscription cleanData = JsonUtility.FromJson<VoskTranscription>(result);
-            // string finalSpokenText = cleanData.text;
-
-            // if (!string.IsNullOrEmpty(result))
-            // {
-            //     if(trainController.IsTraining()&&!string.IsNullOrEmpty(finalSpokenText)){
-            //         Debug.Log($"VOSK speech being sent to Qoobo brain: {finalSpokenText.ToLower()}");
-            //         trickLearner.ParseVoskSpeech(finalSpokenText.ToLower());}
-            //     else{
-            //         ProcessRecognizedSpeech(result.ToLower());}
-
-            // }
+         
 
             lastProcessedPosition = currentPosition;
         }
 
+        //turned off loud noise check because was intrupting piloting
         // Check volume at regular intervals
-        if (Time.time - lastVolumeCheckTime >= volumeCheckInterval)
-        {
-            CheckVolume();
-            lastVolumeCheckTime = Time.time;
-        }
+        // if (Time.time - lastVolumeCheckTime >= volumeCheckInterval)
+        // {
+        //     CheckVolume();
+        //     lastVolumeCheckTime = Time.time;
+        // }
     }
 
     private void ProcessRecognizedSpeech(string speech)//////////////////////

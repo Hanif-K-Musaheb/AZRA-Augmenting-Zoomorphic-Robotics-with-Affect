@@ -11,6 +11,8 @@ public class MenuController : MonoBehaviour
     public FrisbeeController frisbeeController;
     public FeatureSignController signController;
     public HatManager CustomisationManager;
+    public MetricsMenuController metricsMenuController;
+
     [Header("Feature Colors")]
     public Color trainColor = Color.white;
     public Color emotionColor = Color.white;
@@ -30,12 +32,20 @@ public class MenuController : MonoBehaviour
         if (Time.time < nextAllowedClickTime) return; 
         nextAllowedClickTime = Time.time + globalCooldown;
 
+        if (currentFeature == "train")
+        {
+            TurnOffAllFeatures();
+            return; 
+        }
+
         TurnOffAllFeatures();
+
+        metricsMenuController.SetSpeechToggle(false);
 
         trainController.StartTraining(); 
         currentFeature="train";
         signController.ShowExplaination("Training",
-                    "Teach Qoobo tricks by saying the command, then rewarding it with praise, a donut, or a stroke!\n\nTricks to teach:\n1. Flip\n2. Double Flip\n3. Flip + Spin\n4. Flip + Spin + Roll\nNote: Qoobo wont always be obedient",
+                    "Teach Qoobo tricks by saying the command, then rewarding it with praise, a donut, or a stroke!\n\nTricks to teach:\n1. Flip\n2. Double Flip\n3. Flip + Spin\n4. Flip + Spin + Roll\nNote: Qoobo won't always be obedient",
                     trainColor);   
     }
 
@@ -45,7 +55,15 @@ public class MenuController : MonoBehaviour
         if (Time.time < nextAllowedClickTime) return; 
         nextAllowedClickTime = Time.time + globalCooldown;
 
+        if (currentFeature == "emotion show")
+        {
+            TurnOffAllFeatures();
+            return; 
+        }
+
         TurnOffAllFeatures();
+
+        metricsMenuController.SetSpeechToggle(true);
 
         emotionShowController.StartEmotionShow();
         currentFeature="emotion show"; 
@@ -70,6 +88,7 @@ public class MenuController : MonoBehaviour
         }
         TurnOffAllFeatures();
 
+        metricsMenuController.SetSpeechToggle(true);
         TVcontroller.ToggleObject(); 
         currentFeature = "TV";
         
@@ -88,8 +107,15 @@ public class MenuController : MonoBehaviour
     {
         if (Time.time < nextAllowedClickTime) return; 
         nextAllowedClickTime = Time.time + globalCooldown;
+
+        if (currentFeature == "frisbee")
+        {
+            TurnOffAllFeatures();
+            return; 
+        }
+
         TurnOffAllFeatures();
-        
+        metricsMenuController.SetSpeechToggle(true);
         frisbeeController.OnSpawnButtonClicked();
         currentFeature="frisbee";
         signController.ShowExplaination("Catch with a Frisbee",
@@ -101,8 +127,15 @@ public class MenuController : MonoBehaviour
     {
         if (Time.time < nextAllowedClickTime) return; 
         nextAllowedClickTime = Time.time + globalCooldown;
-        TurnOffAllFeatures();
 
+        if (currentFeature == "customisation")
+        {
+            TurnOffAllFeatures();
+            return; 
+        }
+
+        TurnOffAllFeatures();
+        metricsMenuController.SetSpeechToggle(true);
         // CustomisationWindowToggle.ActivateCusomistionWindow();
         CustomisationManager.ActivateHats();
         currentFeature="customisation";
@@ -125,7 +158,7 @@ public class MenuController : MonoBehaviour
         //when adding features to the menu controller add there deactivation here
     }
 
-    public string GetCurrentFeature()
+    public string GetCurrentFeature()//have to chnage voice detector and other dependents if you change from string to state
     {
         return currentFeature;
     }
